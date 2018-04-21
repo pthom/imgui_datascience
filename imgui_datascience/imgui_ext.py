@@ -107,7 +107,7 @@ class TogglableWindowParams():
 
 _ALL_TOGGLABLE_STATUS = {}
 
-def show_togglable_window(window_param : TogglableWindowParams, window_function_code):
+def show_togglable_window(window_param, window_function_code):
     global _ALL_TOGGLABLE_STATUS
     if (not window_param.window_title in _ALL_TOGGLABLE_STATUS):
         _ALL_TOGGLABLE_STATUS[window_param.window_title] = window_param.initialShow

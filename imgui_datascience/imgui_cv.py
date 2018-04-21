@@ -173,7 +173,7 @@ def is_mouse_hovering_last_image(): # only works if the image was presented in i
 
 def image_explorer(image, width = None, height = None, title="", zoom_key: str = "", hide_buttons = False, image_adjustments = ImageAdjustments()):
     """
-   :param image: opencv / np image. Only RGB images are supported
+   :param image: opencv / np image.
    :param width:
    :param height:
    :param title: an optional title
