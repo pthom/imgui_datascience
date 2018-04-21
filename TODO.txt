@@ -1,0 +1,1 @@
+https://cookiecutter-pypackage.readthedocs.io/en/latest/readme.html
