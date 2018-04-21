@@ -9,12 +9,15 @@ import math
 
 _start = timer()
 
+def _isclose(a, b):
+    return math.fabs(a - b) < 1E-6
+
 class ImageAdjustments:
     def __init__(self, factor = 1., delta = 0.):
         self.factor = factor
         self.delta = delta
     def is_none(self):
-        return math.isclose(self.factor, 1.) and math.isclose(self.delta, 0.)
+        return _isclose(self.factor, 1.) and _isclose(self.delta, 0.)
     def adjust(self, image):
         if self.is_none():
             return image
@@ -24,21 +27,16 @@ class ImageAdjustments:
 
 class SizePixel():
     def __init__(self, width = 0, height = 0):
-        self.width = width
-        self.height = height
+        self.width = int(width)
+        self.height = int(height)
     @staticmethod
-    def from_image(image: np.ndarray):
+    def from_image(image):
         self = SizePixel()
         self.width = image.shape[1]
         self.height = image.shape[0]
         return self
     def as_tuple_width_height(self):
         return (self.width, self.height)
-
-
-from ._imgui_cv_zoom import image_explorer_autostore_zoominfo
-
-
 
 def _to_rgb_image(img):
     if (len(img.shape) >= 3):
@@ -64,7 +62,7 @@ def _to_rgb_image(img):
 
 # inspired from https://www.programcreek.com/python/example/95539/OpenGL.GL.glPixelStorei (example 3)
 @static_vars( all_cv_textures = [] )
-def _image_to_texture(img: np.ndarray, image_adjustments: ImageAdjustments):
+def _image_to_texture(img, image_adjustments):
     img_adjusted = image_adjustments.adjust(img)
     img_rgb = _to_rgb_image(img_adjusted)
 
@@ -104,7 +102,7 @@ def _image_viewport_size(image, width = None, height = None):
     zoomed_status = {},
     zoom_click_times = {},
     last_shown_image = None )
-def _image_impl(img: np.ndarray, image_adjustments: ImageAdjustments, width = None, height = None, title=""):
+def _image_impl(img, image_adjustments, width = None, height = None, title=""):
     statics = _image_impl.statics
     statics.last_shown_image = img
     zoom_key = imgui_ext.make_unique_label(title)
@@ -140,13 +138,14 @@ def _image_impl(img: np.ndarray, image_adjustments: ImageAdjustments, width = No
 
     return mouse_position_last_image()
 
-def image(img: np.ndarray, width = None, height = None, title="", image_adjustments = ImageAdjustments()):
+def image(img, width = None, height = None, title="", image_adjustments = ImageAdjustments()):
     return _image_impl(img, image_adjustments, width=width, height=height, title=title)
 
-def _is_in_image(pixel: imgui.Vec2, image_shape):
+def _is_in_image(pixel, image_shape):
+	# type : (imgui.Vec2, shape) -> Bool
     return pixel.x >= 0 and pixel.y >=0 and pixel.x < image_shape[1] and pixel.y < image_shape[0]
 
-def _is_in_last_image(pixel: imgui.Vec2):
+def _is_in_last_image(pixel):
     last_image_shape = _image_impl.statics.last_shown_image.shape
     return _is_in_image(pixel, last_image_shape)
 
@@ -171,7 +170,7 @@ def is_mouse_hovering_last_image(): # only works if the image was presented in i
         return True
 
 
-def image_explorer(image, width = None, height = None, title="", zoom_key: str = "", hide_buttons = False, image_adjustments = ImageAdjustments()):
+def image_explorer(image, width = None, height = None, title="", zoom_key = "", hide_buttons = False, image_adjustments = ImageAdjustments()):
     """
    :param image: opencv / np image.
    :param width:
@@ -192,3 +191,4 @@ def image_explorer(image, width = None, height = None, title="", zoom_key: str =
         hide_buttons=hide_buttons)
     imgui.end_group()
     return mouse_location_original_image
+

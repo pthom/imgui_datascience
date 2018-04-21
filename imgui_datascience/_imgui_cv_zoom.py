@@ -10,6 +10,9 @@ import cv2
 import math
 
 
+def _isclose(a, b):
+    return math.fabs(a - b) < 1E-6
+
 def compute_zoom_matrix(zoom_center, zoom_ratio):
     mat = np.eye(3)
     mat[0, 0] = zoom_ratio
@@ -42,12 +45,12 @@ class ZoomInfo:
         self.zoom_or_pan = ZoomOrPan.Pan
         self.last_delta = imgui.Vec2(0., 0.)
 
-    def set_scale_one(self, image_size : SizePixel, viewport_size : SizePixel):
+    def set_scale_one(self, image_size, viewport_size):
         self.affine_transform = np.eye(3)
         self.affine_transform[0, 2] = (viewport_size.width / 2 - image_size.width / 2)
         self.affine_transform[1, 2] = (viewport_size.height / 2 - image_size.height / 2)
 
-    def set_full_view(self, image_size : SizePixel, viewport_size : SizePixel):
+    def set_full_view(self, image_size, viewport_size):
         k_image = image_size.width / image_size.height
         k_viewport = viewport_size.width / viewport_size.height
         if k_image > k_viewport:
@@ -59,12 +62,12 @@ class ZoomInfo:
         self.affine_transform[1, 1] = zoom
 
     @staticmethod
-    def make_full_view(image_size : SizePixel, viewport_size : SizePixel):
+    def make_full_view(image_size, viewport_size):
         _ = ZoomInfo()
         _.set_full_view(image_size, viewport_size)
         return _
 
-    def mouse_location_original_image(self, mouse_location) -> imgui.Vec2:
+    def mouse_location_original_image(self, mouse_location): # -> imgui.Vec2:
         mouse2 = np.array([ [mouse_location.x], [mouse_location.y], [1.] ])
         pt_original = np.dot( numpy.linalg.inv(self.affine_transform), mouse2)
         return imgui.Vec2( pt_original[0, 0], pt_original[1, 0] )
@@ -72,7 +75,7 @@ class ZoomInfo:
 
 
 class ImageWithZoomInfo():
-    def __init__(self, image, viewport_size : SizePixel, zoom_info = None, hide_buttons = False, image_adjustments = imgui_cv.ImageAdjustments()):
+    def __init__(self, image, viewport_size, zoom_info = None, hide_buttons = False, image_adjustments = imgui_cv.ImageAdjustments()):
         self.image = image
         self.original_viewport_size = viewport_size
         self.force_viewport_size = False
@@ -117,7 +120,7 @@ class ImageWithZoomInfo():
         m = m33_to_m23(self.zoom_info.affine_transform)
         zoomed = cv2.warpAffine(self.image, m, self.current_viewport_size().as_tuple_width_height(), flags = cv2.INTER_NEAREST)
         return zoomed
-    def viewport_center_original_image(self) -> imgui.Vec2:
+    def viewport_center_original_image(self): # -> imgui.Vec2:
         center = np.array([[self.current_viewport_size().width / 2.], [self.current_viewport_size().height / 2.], [1.]])
         center_original = np.dot(
             numpy.linalg.inv(self.zoom_info.affine_transform),
@@ -125,7 +128,7 @@ class ImageWithZoomInfo():
         return imgui.Vec2(center_original[0, 0], center_original[1, 0])
 
 
-def _display_zoom_or_pan_buttons(im : ImageWithZoomInfo):
+def _display_zoom_or_pan_buttons(im) : # : ImageWithZoomInfo):
     # display zoom or pan radio buttons
     current_mode = im.zoom_info.zoom_or_pan
     if imgui.radio_button(imgui_ext.make_unique_label("drag to pan"), current_mode == ZoomOrPan.Pan):
@@ -156,7 +159,8 @@ def color_msg(color):
             color_msg = "RGBA({0},{1},{2},{3})".format(bgra[2], bgra[1], bgra[0], bgra[3])
     return color_msg
 
-def image_explorer_impl(im : ImageWithZoomInfo, title =""):
+def image_explorer_impl(im, title =""):
+	# type: (ImageWithZoomInf, str) -> None
     """
     :return: imgui.Vec2 (mouse_location_original_image) or None (if not on image)
     """
@@ -283,7 +287,7 @@ def image_explorer_impl(im : ImageWithZoomInfo, title =""):
         image_type_msg = str(im.image.dtype) + str(im.image.shape)
         zoom = im.zoom_info.affine_transform[0, 0]
         import math
-        if not math.isclose(zoom, 1):
+        if not _isclose(zoom, 1):
             zoom_msg = "Zoom:{0:.2f} ".format(zoom)
         else:
             zoom_msg = ""
@@ -308,7 +312,7 @@ def image_explorer_impl(im : ImageWithZoomInfo, title =""):
 
         # Show pixel color info
         if not mouse_location is None:
-            color = zoomed_image[round(mouse_location.y), round(mouse_location.x)]
+            color = zoomed_image[int(round(mouse_location.y)), int(round(mouse_location.x))]
 
             mouse2 = np.array([ [mouse_location.x], [mouse_location.y], [1.]])
             pt_original =  np.dot( numpy.linalg.inv(im.zoom_info.affine_transform), mouse2)

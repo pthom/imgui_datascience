@@ -30,7 +30,7 @@ class Params:
 
 _g_Imgui_extensions_root_window_size = (640, 480)
 
-def run(gui_loop_function, params : Params = Params()):
+def run(gui_loop_function, params = Params()):
     if (params.windowed_full_screen):
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (params.windowed_full_screen_x_margin / 2, params.window_title_height)
 

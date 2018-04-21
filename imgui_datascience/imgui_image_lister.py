@@ -4,7 +4,8 @@ from . import imgui_cv
 from . import imgui_ext
 from . import imgui_fig
 
-def image_size_fit_in_gui(image_size : imgui.Vec2, gui_size: imgui.Vec2, can_make_bigger : bool = False):
+def image_size_fit_in_gui(image_size, gui_size, can_make_bigger = False):
+    # type: (imgui.Vec2, imgui.Vec2, Bool) -> imgui.Vec2
     if image_size.x <= gui_size.x and image_size.y <= gui_size.y and not can_make_bigger:
         return image_size
     else:
