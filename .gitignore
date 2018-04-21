@@ -104,3 +104,5 @@ ENV/
 # pycharm
 .idea
 
+# imgui
+imgui.ini
