@@ -1,4 +1,4 @@
-Welcome to ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science's documentation!
+Welcome (Py)ImGui for Data Science's documentation!
 ======================================
 
 .. toctree::
