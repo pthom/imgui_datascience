@@ -5,6 +5,6 @@ flake8==3.5.0
 tox==3.0.0
 coverage==4.5.1
 Sphinx==1.7.2
-twine
+twine==1.11.0
 pytest
 pytest-runner
