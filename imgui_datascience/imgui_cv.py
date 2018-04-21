@@ -36,7 +36,7 @@ class SizePixel():
         return (self.width, self.height)
 
 
-from . import _imgui_cv_zoom
+from ._imgui_cv_zoom import image_explorer_autostore_zoominfo
 
 
 
