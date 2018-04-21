@@ -9,8 +9,8 @@
 .. image:: https://img.shields.io/travis/pthom/imgui_datascience.svg
         :target: https://travis-ci.org/pthom/imgui_datascience
 
-.. image:: https://readthedocs.org/projects/imgui-datascience/badge/?version=latest
-        :target: https://imgui-datascience.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/imgui_datascience/badge/?version=latest
+        :target: https://imgui_datascience.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
 
@@ -24,7 +24,7 @@ A set of utilities for data science using imgui.
 
 
 * Free software: Apache Software License 2.0
-* Documentation: https://imgui-datascience.readthedocs.io.
+* Documentation: https://imgui_datascience.readthedocs.io.
 
 
 Features
