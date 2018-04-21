@@ -1,6 +1,6 @@
 import imgui
 import os
-
+from collections import OrderedDict
 from inspect import getsourcefile
 from os.path import abspath
 
@@ -12,14 +12,14 @@ class FontId(object):
 
     @staticmethod
     def all_fonts_dict():
-        return {
-            'Arial_10': FontId.Arial_10,
-            'Arial_14': FontId.Arial_14,
-            'Arial_18': FontId.Arial_18,
-            'Arial_22': FontId.Arial_22,
-            'Arial_26': FontId.Arial_26,
-            'Arial_30': FontId.Arial_30
-        }
+        return OrderedDict([
+            ('Arial_10', FontId.Arial_10),
+            ('Arial_14', FontId.Arial_14),
+            ('Arial_18', FontId.Arial_18),
+            ('Arial_22', FontId.Arial_22),
+            ('Arial_26', FontId.Arial_26),
+            ('Arial_30', FontId.Arial_30)
+        ])
 
 
 _ALL_LOADED_FONTS = {}
