@@ -1,4 +1,6 @@
--r requirements.txt
+matplotlib=2.2.2
+opencv-python==3.4.0.12
+imgui[pygame]==0.1.0
 bumpversion==0.5.3
 wheel==0.31.0
 watchdog==0.8.3
