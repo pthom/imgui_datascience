@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science'
+project = u'(Py)ImGui for Data Science'
 copyright = u"2018, Pascal Thomet"
 author = u"Pascal Thomet"
 
@@ -129,7 +129,7 @@ latex_elements = {
 # [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'imgui_datascience.tex',
-     u'ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science Documentation',
+     u'(Py)ImGui for Data Science Documentation',
      u'Pascal Thomet', 'manual'),
 ]
 
@@ -140,7 +140,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'imgui_datascience',
-     u'ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science Documentation',
+     u'(PyImGui for Data Science Documentation',
      [author], 1)
 ]
 
@@ -152,7 +152,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'imgui_datascience',
-     u'ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science Documentation',
+     u'(Py)ImGui for Data Science Documentation',
      author,
      'imgui_datascience',
      'One line description of project.',
