@@ -38,9 +38,8 @@ and "help wanted" is open to whoever wants to implement it.
 Write Documentation
 ~~~~~~~~~~~~~~~~~~~
 
-ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science could always use more documentation, whether as part of the
-official ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science docs, in docstrings, or even on the web in blog posts,
-articles, and such.
+(Py)ImGui for Data Science could always use more documentation, whether as part of the
+official docs, in docstrings, or even on the web in blog posts, articles, and such.
 
 Submit Feedback
 ~~~~~~~~~~~~~~~
