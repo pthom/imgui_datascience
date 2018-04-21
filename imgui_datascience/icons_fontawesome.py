@@ -3,7 +3,7 @@
 # // for use with https://github.com/FortAwesome/Font-Awesome/blob/master/fonts/fontawesome-webfont.ttf
 
 
-class IconsFontAwesome():
+class IconsFontAwesome:
     ICON_MIN_FA = 0xf000
     ICON_MAX_FA = 0xf2e0
     ICON_FA_GLASS = "\xEF\x80\x80"
@@ -681,3 +681,6 @@ class IconsFontAwesome():
     ICON_FA_SUPERPOWERS = "\xEF\x8B\x9D"
     ICON_FA_WPEXPLORER = "\xEF\x8B\x9E"
     ICON_FA_MEETUP = "\xEF\x8B\xA0"
+
+    def __init__(self):
+        pass

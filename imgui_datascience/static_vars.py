@@ -1,3 +1,6 @@
+import unittest
+
+
 class Bunch(dict):
     """
     `Bunch` is a dictionary that supports attribute-style access, a la JavaScript.
@@ -26,17 +29,13 @@ def static_vars(**kwargs):
     return decorate
 
 
-#########################
-import unittest
-
-
 @static_vars(name="Martin")
 def _my_function_with_statics():
     statics = _my_function_with_statics.statics
     return "Hello, {0}".format(statics.name)
 
 
-class test_static_vars(unittest.TestCase):
+class TestStaticVars(unittest.TestCase):
     def test(self):
         msg = _my_function_with_statics()
         self.assertEqual(msg, "Hello, Martin")

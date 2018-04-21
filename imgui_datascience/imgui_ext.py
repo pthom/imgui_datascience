@@ -1,29 +1,31 @@
 import imgui
 import os
-from .icons_fontawesome import *
 
 from inspect import getsourcefile
 from os.path import abspath
-this_script_dir = os.path.dirname(abspath(getsourcefile(lambda:0)))
+
+this_script_dir = os.path.dirname(abspath(getsourcefile(lambda: 0)))
+
 
 class FontId(object):
     Arial_10, Arial_14, Arial_18, Arial_22, Arial_26, Arial_30 = range(6)
+
     @staticmethod
     def all_fonts_dict():
         return {
-            'Arial_10' : FontId.Arial_10,
-            'Arial_14' : FontId.Arial_14,
-            'Arial_18' : FontId.Arial_18,
-            'Arial_22' : FontId.Arial_22,
-            'Arial_26' : FontId.Arial_26,
-            'Arial_30' : FontId.Arial_30
+            'Arial_10': FontId.Arial_10,
+            'Arial_14': FontId.Arial_14,
+            'Arial_18': FontId.Arial_18,
+            'Arial_22': FontId.Arial_22,
+            'Arial_26': FontId.Arial_26,
+            'Arial_30': FontId.Arial_30
         }
-
 
 
 _ALL_LOADED_FONTS = {}
 
-def _load_one_font(font_size, font_file ="source-sans-pro.regular.ttf", font_dir = this_script_dir):
+
+def _load_one_font(font_size, font_file="source-sans-pro.regular.ttf", font_dir=this_script_dir):
     io = imgui.get_io()
     if font_dir == "":
         font_dir = "./"
@@ -35,6 +37,7 @@ def _load_one_font(font_size, font_file ="source-sans-pro.regular.ttf", font_dir
     font = io.fonts.add_font_from_file_ttf(font_dir + "/" + font_file, font_size)
     return font
 
+
 # def _LoadFontAwesome(font_size, font_file ="fontawesome-webfont.ttf", font_dir =""):
 #     io = imgui.get_io()
 #     if font_dir == "":
@@ -45,15 +48,19 @@ def _load_one_font(font_size, font_file ="source-sans-pro.regular.ttf", font_dir
 #     font = io.fonts.add_font_from_file_ttf(font_dir + "/" + font_file, font_size, icon_ranges)
 #     return font
 
-def push_font(fontId):
+
+def push_font(font_id):
     global _ALL_LOADED_FONTS
-    imgui.push_font(_ALL_LOADED_FONTS[fontId])
+    imgui.push_font(_ALL_LOADED_FONTS[font_id])
+
 
 def push_default_font():
     push_font(FontId.Arial_18)
 
+
 def pop_font():
     imgui.pop_font()
+
 
 def _load_fonts():
     global _ALL_LOADED_FONTS
@@ -70,18 +77,21 @@ def _load_fonts():
 
 _ALL_UNIQUE_LABELS = []
 
-def make_unique_label(label, object_id = None):
+
+def make_unique_label(label, object_id=None):
     global _ALL_UNIQUE_LABELS
-    if object_id == None:
+    if object_id is None:
         object_id = str(len(_ALL_UNIQUE_LABELS))
     result = label + "##" + object_id
     _ALL_UNIQUE_LABELS.append(result)
     return result
 
-def make_unique_empyt_label():
+
+def make_unique_empty_label():
     return make_unique_label("")
 
-def _ClearAllUniqueLabels():
+
+def __clear_all_unique_labels():
     global _ALL_UNIQUE_LABELS
     _ALL_UNIQUE_LABELS = []
 
@@ -92,15 +102,16 @@ def make_label_plus_icon(label, icon):
     _ALL_UNIQUE_LABELS.add(result)
     return result
 
-def make_icon_plus_lbel(icon, label):
+
+def make_icon_plus_label(icon, label):
     global _ALL_UNIQUE_LABELS
     result = icon + label + "##" + len(_ALL_UNIQUE_LABELS)
     _ALL_UNIQUE_LABELS.add(result)
     return result
 
 
-class TogglableWindowParams():
-    def __init__(self, window_title ="", initial_show = True, size = (0,0), pos=(0, 0)):
+class TogglableWindowParams:
+    def __init__(self, window_title="", initial_show=True, size=(0, 0), pos=(0, 0)):
         self.window_title = window_title
         self.toggle_button_legend = ""
         self.size = size
@@ -111,44 +122,47 @@ class TogglableWindowParams():
 
 _ALL_TOGGLABLE_STATUS = {}
 
+
 def show_togglable_window(window_param, window_function_code):
     global _ALL_TOGGLABLE_STATUS
-    if (not window_param.window_title in _ALL_TOGGLABLE_STATUS):
+    if window_param.window_title not in _ALL_TOGGLABLE_STATUS:
         _ALL_TOGGLABLE_STATUS[window_param.window_title] = window_param.initialShow
 
-    thisWindowOpenStatus = _ALL_TOGGLABLE_STATUS[window_param.window_title]
+    this_window_open_status = _ALL_TOGGLABLE_STATUS[window_param.window_title]
 
-    if (thisWindowOpenStatus):
+    if this_window_open_status:
         toggle_button_legend = "Hide " + window_param.window_title
     else:
         toggle_button_legend = "Show " + window_param.window_title
 
     if imgui.button(make_unique_label(toggle_button_legend)):
-        thisWindowOpenStatus = not thisWindowOpenStatus
+        this_window_open_status = not this_window_open_status
 
-    if (thisWindowOpenStatus):
-        imgui.set_next_window_size(window_param.size)
-        if (window_param.include_begin_code):
+    if this_window_open_status:
+        imgui.set_next_window_size(window_param.size[0], window_param.size[1])
+        if window_param.include_begin_code:
             imgui.begin(window_param.window_title)
 
         window_function_code()
 
-        if (window_param.include_begin_code):
+        if window_param.include_begin_code:
             imgui.end()
 
-def togglable_window_toggle(window_title, open  = None):
+
+def togglable_window_toggle(window_title, open_window=None):
     global _ALL_TOGGLABLE_STATUS
-    if open is None:
-        _ALL_TOGGLABLE_STATUS[window_title] =  not _ALL_TOGGLABLE_STATUS[window_title]
+    if open_window is None:
+        _ALL_TOGGLABLE_STATUS[window_title] = not _ALL_TOGGLABLE_STATUS[window_title]
     else:
-        _ALL_TOGGLABLE_STATUS[window_title] =  open
+        _ALL_TOGGLABLE_STATUS[window_title] = open_window
+
 
 def togglable_window_get_status(window_title):
     global _ALL_TOGGLABLE_STATUS
     return _ALL_TOGGLABLE_STATUS[window_title]
 
 
-def listbox_dict(dict_string_value, current_key, title_top = "", title_right = "", height_in_items=20, item_width = None):
+def listbox_dict(dict_string_value, current_key, title_top="", title_right="", height_in_items=20, item_width=None):
     keys = [key for key, _ in dict_string_value.items()]
     if current_key in keys:
         current_idx = keys.index(current_key)
@@ -159,9 +173,8 @@ def listbox_dict(dict_string_value, current_key, title_top = "", title_right = "
     if title_top != "":
         imgui.text(title_top)
     changed, new_idx = imgui.listbox(title_right, current_idx, keys, height_in_items=height_in_items)
-    if new_idx >= 0 and new_idx < len(keys):
+    if 0 <= new_idx < len(keys):
         new_key = keys[new_idx]
     else:
         new_key = ""
     return changed, new_key
-
