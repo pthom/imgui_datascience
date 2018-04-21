@@ -144,7 +144,7 @@ def togglable_window_get_status(window_title):
     return _ALL_TOGGLABLE_STATUS[window_title]
 
 
-def listbox_dict(dict_string_value : dict(), current_key, title_top = "", title_right = "", height_in_items=20, item_width = None):
+def listbox_dict(dict_string_value, current_key, title_top = "", title_right = "", height_in_items=20, item_width = None):
     keys = [key for key, _ in dict_string_value.items()]
     if current_key in keys:
         current_idx = keys.index(current_key)
