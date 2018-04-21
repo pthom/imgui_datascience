@@ -1,5 +1,4 @@
 import imgui
-from enum import Enum
 import os
 from .icons_fontawesome import *
 
@@ -7,14 +6,19 @@ from inspect import getsourcefile
 from os.path import abspath
 this_script_dir = os.path.dirname(abspath(getsourcefile(lambda:0)))
 
-class FontId(Enum):
-    Arial_10 = "Arial_10"
-    Arial_14 = "Arial_14"
-    Arial_18 = "Arial_18"
-    Arial_22 = "Arial_22"
-    Arial_26 = "Arial_26"
-    Arial_30 = "Arial_30"
-    # FontAwesome_30 = "FontAwesome_30"
+class FontId(object):
+    Arial_10, Arial_14, Arial_18, Arial_22, Arial_26, Arial_30 = range(6)
+    @staticmethod
+    def all_fonts_dict():
+        return {
+            'Arial_10' : FontId.Arial_10,
+            'Arial_14' : FontId.Arial_14,
+            'Arial_18' : FontId.Arial_18,
+            'Arial_22' : FontId.Arial_22,
+            'Arial_26' : FontId.Arial_26,
+            'Arial_30' : FontId.Arial_30
+        }
+
 
 
 _ALL_LOADED_FONTS = {}
@@ -128,7 +132,7 @@ def show_togglable_window(window_param, window_function_code):
             imgui.begin(window_param.window_title)
 
         window_function_code()
-            
+
         if (window_param.include_begin_code):
             imgui.end()
 

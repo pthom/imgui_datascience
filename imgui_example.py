@@ -103,9 +103,9 @@ def demo_figs():
 
 
 def demo_font():
-    for font in imgui_ext.FontId:
-        imgui_ext.push_font(font)
-        imgui.text(font.value)
+    for font_name, font_id in imgui_ext.FontId.all_fonts_dict().items():
+        imgui_ext.push_font(font_id)
+        imgui.text(font_name)
         imgui_ext.pop_font()
 
 
@@ -130,6 +130,7 @@ with static variables,
 a 'static_vars' decorator 
 is provided
     """
+    imgui.push_item_width(500)
     imgui.input_text_multiline("python code\n" + python_advice, python_code, len(python_code) * 2, 0, 150)
 
     imgui.text("\nThis python code is the equivalent of the following cpp code:\n\n")
@@ -146,6 +147,7 @@ is provided
     static bool check = true;
     ImGui::Checkbox("checkbox", &check);
 }"""
+    imgui.push_item_width(500)
     imgui.input_text_multiline("cpp code", cpp_code, len(cpp_code) * 2, 0, 200)
 
 def show_one_feature(feature_function, feature_intro, default_open = False):

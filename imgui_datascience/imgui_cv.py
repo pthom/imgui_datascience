@@ -180,9 +180,10 @@ def image_explorer(image, width = None, height = None, title="", zoom_key: str =
    :param zoom_key: Set the same zoom_key for two image if you want to link their zoom settings
    :return: mouse location in image coordinates (None if the mouse is outside of the image)
     """
+    from ._imgui_cv_zoom import image_explorer_autostore_zoominfo
     viewport_size = _image_viewport_size(image, width, height)
     imgui.begin_group()
-    mouse_location_original_image =_imgui_cv_zoom.image_explorer_autostore_zoominfo(
+    mouse_location_original_image = image_explorer_autostore_zoominfo(
         image,
         viewport_size,
         title,
