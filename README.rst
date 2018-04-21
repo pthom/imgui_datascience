@@ -1,5 +1,5 @@
 ===============================================================================
-ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science
+(Py)ImGui for Data Science
 ===============================================================================
 
 
@@ -20,7 +20,7 @@ ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science
 
 
 
-A set o
+A set of utilities for data science using imgui.
 
 
 * Free software: Apache Software License 2.0
