@@ -177,6 +177,23 @@ def demo_this_module_code():
         put_text_to_clipboard(source)
 
 
+def demo_imguilister_standalone():
+    def run_imguilister_standalone():
+        image = cv2.imread(THIS_SCRIPT_DIR + "/owl.jpg")
+        ImGuiImageLister.push_image("owl", image)
+        ImGuiLister_ShowStandalone()
+
+    imgui.text("""
+If you only need to inspect one or serveral images with a better tool than
+cv2.imshow(), all you need to write is a function like this one:
+""")
+    source  = inspect.getsource(run_imguilister_standalone)
+    imgui.input_text_multiline(imgui_ext.make_unique_empty_label(), source, len(source) * 2, 400, 90)
+    imgui.text("If you click this button, a new demo will be launched, using this code")
+    if imgui.button("Demo standalone"):
+        run_imguilister_standalone()
+
+
 @static_vars(flag_show_code = dict())
 def show_one_feature(feature_function, feature_intro, default_open=False):
     flag_show_code = show_one_feature.statics.flag_show_code
@@ -229,6 +246,7 @@ def gui_loop():
     show_one_feature(demo_image_explorer, "Using image explorer")
     show_one_feature(demo_image_explorer_types, "Image types")
     show_one_feature(demo_image_lister, "Image Lister")
+    show_one_feature(demo_imguilister_standalone, "Image Lister Standalone")
     show_one_feature(demo_font, "Using different font sizes")
     show_one_feature(demo_cpp_to_python, "Python code advices / porting from cpp ")
     show_one_feature(demo_this_module_code, "Code for this demo")

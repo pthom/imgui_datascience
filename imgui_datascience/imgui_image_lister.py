@@ -108,9 +108,16 @@ class _ImguiImageLister:
         else:
             return self.window_size
 
+    def _select_first_image(self):
+        items = list(self.images_info.items())
+        if len(items) > 0:
+            self.current_image = items[0][0]
+
     def _heartbeat(self):
         if not self.opened:
             return
+        if self.current_image == "":
+            self._select_first_image()
         imgui.set_next_window_position(self.position.x, self.position.y, imgui.APPEARING)
         imgui.set_next_window_size(self.actual_window_startup_size().x, self.actual_window_startup_size().y,
                                    imgui.APPEARING)
