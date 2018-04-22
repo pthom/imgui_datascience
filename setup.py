@@ -36,7 +36,7 @@ setup(
         '': ['*.ttf', 'images/*.jpg', 'images/*.png'],
     },
     description="A set of utilities for data science using python, imgui, numpy and opencv",
-    install_requires=['imgui', 'opencv-python', 'imgui[pygame]', 'pyopengl', 'matplotlib','pygame'],
+    install_requires=['imgui', 'opencv-python', 'imgui[pygame]', 'pyopengl', 'matplotlib','pygame', 'enum34'],
     license="Apache Software License 2.0",
     long_description="""
 
@@ -83,6 +83,6 @@ Inspect images
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/pthom/imgui_datascience',
-    version='0.2.2',
+    version='0.2.3',
     zip_safe=False,
 )
