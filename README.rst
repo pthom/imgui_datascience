@@ -26,7 +26,7 @@ A set of utilities for data science using imgui.
 * Documentation: https://imgui_datascience.readthedocs.io.
 
 
-.. include:: ../FEATURES.rst
+.. include:: FEATURES.rst
 
 Credits
 =======
