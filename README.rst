@@ -40,6 +40,7 @@ Display matplotlib figures
 --------------------------
 
     .. image:: images/mplot.jpg
+        :height: 200
 
 Code::
 
@@ -59,6 +60,7 @@ Inspect images
   * zoom & pan (with possible sync between 2 images)
 
     .. image:: images/image_explorer.jpg
+        :height: 200
 
 See https://www.youtube.com/watch?v=yKw7VaQNFCI&feature=youtu.be for an animated demo.
 
@@ -93,6 +95,7 @@ Code::
         ImGuiLister_ShowStandalone()
 
 .. image:: images/image_lister.png
+        :height: 200
 
 Full demo
 --------
@@ -101,6 +104,7 @@ Full demo
 View the full demo (1'50") on youtube by clicking on the link below
 
 .. image:: images/thumb.jpg
+        :height: 100
 
 https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be
 
