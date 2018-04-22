@@ -1,3 +1,4 @@
+from __future__ import division
 from enum import Enum
 import numpy as np
 import numpy.linalg
@@ -56,11 +57,11 @@ class ZoomInfo:
 
     def set_full_view(self, image_size, viewport_size):
         k_image = image_size.width / image_size.height
-        k_viewport = viewport_size.width / viewport_size.height
+        k_viewport = float(viewport_size.width) / float(viewport_size.height)
         if k_image > k_viewport:
-            zoom = viewport_size.width / image_size.width
+            zoom = float(viewport_size.width) / float(image_size.width)
         else:
-            zoom = viewport_size.height / image_size.height
+            zoom = float(viewport_size.height) / float(image_size.height)
         self.affine_transform = np.eye(3)
         self.affine_transform[0, 0] = zoom
         self.affine_transform[1, 1] = zoom
