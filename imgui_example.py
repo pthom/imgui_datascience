@@ -1,11 +1,12 @@
 from __future__ import division
 import cv2
+from collections import deque
 from imgui_datascience import *
 
 import os
-import copy
 import inspect
 import numpy as np
+from timeit import default_timer
 
 from inspect import getsourcefile
 from os.path import abspath
@@ -29,7 +30,7 @@ def demo_image():
     imgui.text("This image is provided by opencv / numpy.")
     imgui.text("You can click on it to show it with its original size")
     statics = demo_image.statics
-    imgui_cv.image(statics.img, height=150, title="flowers") # returns mouse_position
+    imgui_cv.image(statics.img, height=150, title="flowers")  # returns mouse_position
 
 
 def make_contour_image(image):
@@ -138,8 +139,7 @@ with static variables,
 a 'static_vars' decorator 
 is provided
     """
-    imgui.push_item_width(500)
-    imgui.input_text_multiline("python code\n" + python_advice, python_code, len(python_code) * 2, 0, 150)
+    imgui.input_text_multiline("python code\n" + python_advice, python_code, len(python_code) * 2, 500, 150)
 
     imgui.text("\nThis python code is the equivalent of the following cpp code:\n\n")
     cpp_code = """void ShowButtons() 
@@ -155,13 +155,31 @@ is provided
     static bool check = true;
     ImGui::Checkbox("checkbox", &check);
 }"""
-    imgui.push_item_width(500)
-    imgui.input_text_multiline("cpp code", cpp_code, len(cpp_code) * 2, 0, 200)
+    imgui.input_text_multiline("cpp code", cpp_code, len(cpp_code) * 2, 500, 200)
+
+
+def demo_this_module_code():
+    module = inspect.getmodule(demo_this_module_code)
+    source = inspect.getsource(module)
+    imgui.input_text_multiline("", source, len(source) * 2, 750, 400)
+    if imgui.button("Copy to clipboard"):
+        def put_text_to_clipboard(text):
+            try:
+                from Tkinter import Tk  # python 2
+            except ImportError:
+                from tkinter import Tk  # python 3
+            r = Tk()
+            r.withdraw()
+            r.clipboard_clear()
+            r.clipboard_append(text)
+            r.update()
+            r.destroy()
+        put_text_to_clipboard(source)
 
 
 def show_one_feature(feature_function, feature_intro, default_open=False):
     flags = imgui.TREE_NODE_DEFAULT_OPEN if default_open else 0
-    expanded, visible = imgui.collapsing_header(feature_intro, flags=flags)
+    expanded, visible=imgui.collapsing_header(feature_intro, flags=flags)
     if expanded:
         imgui_ext.push_font(imgui_ext.FontId.Arial_18)
         imgui.text(feature_intro)
@@ -169,11 +187,34 @@ def show_one_feature(feature_function, feature_intro, default_open=False):
         feature_function()
 
 
+@static_vars(last_call_times=deque())
+def compute_fps():
+    statics = compute_fps.statics
+    now = default_timer()
+    statics.last_call_times.append(now)
+    window_length = 24 # the computed fps is the average for the last 24 frames
+    if len(statics.last_call_times) > window_length:
+        last = statics.last_call_times.popleft()
+        fps = float(window_length) / (now - last)
+    else:
+        fps = 0
+    return fps
+
+
+def show_fps():
+    imgui.set_next_window_position(0, 0, imgui.APPEARING)
+    imgui.set_next_window_size(100, 40, imgui.APPEARING)
+    imgui.begin("FPS")
+    msg = "{0:.1f}".format(compute_fps())
+    imgui.text(msg)
+    imgui.end()
+
+
 def gui_loop():
-    imgui.set_next_window_position(0, 20, imgui.APPEARING)
+    imgui.set_next_window_position(0, 40, imgui.APPEARING)
     imgui.set_next_window_size(750, 680, imgui.APPEARING)
     imgui.begin("ImGui for data scientists")
-
+    show_fps()
     show_one_feature(demo_image, "Using opencv images (numpy.ndarray)")
     show_one_feature(demo_figs, "Using matplotlib figures")
     show_one_feature(demo_image_explorer, "Using image explorer")
@@ -181,10 +222,11 @@ def gui_loop():
     show_one_feature(demo_image_lister, "Image Lister")
     show_one_feature(demo_font, "Using different font sizes")
     show_one_feature(demo_cpp_to_python, "Python code advices / porting from cpp ")
+    show_one_feature(demo_this_module_code, "Code for this demo")
     show_one_feature(demo_original_demo, "ImGui Demo")
     imgui.end()
 
-    imgui.set_next_window_position(750, 20, imgui.APPEARING)
+    imgui.set_next_window_position(750, 40, imgui.APPEARING)
     imgui.show_test_window()
 
 
