@@ -23,6 +23,14 @@ A set of utilities for data science using python, imgui, numpy and opencv.
 * Free software: Apache Software License 2.0
 * Documentation: https://imgui_datascience.readthedocs.io.
 
+Install & test
+==============
+
+Code::
+
+    pip install imgui_datascience
+    python -m imgui_datascience --example
+
 
 Features
 ========
