@@ -8,13 +8,13 @@ Installation
 Stable release
 --------------
 
-To install ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science, run this command in your terminal:
+To install, run this command in your terminal:
 
 .. code-block:: console
 
     $ pip install imgui_datascience
 
-This is the preferred method to install ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science, as it will always install the most recent stable release.
+This is the preferred method to install, as it will always install the most recent stable release.
 
 If you don't have `pip`_ installed, this `Python installation guide`_ can guide
 you through the process.
@@ -26,7 +26,7 @@ you through the process.
 From sources
 ------------
 
-The sources for ImGui [B[D[D[D[D[D[D[D[D[D[D[C[C[C[C(Py)[ImGui for Data Science can be downloaded from the `Github repo`_.
+The sources can be downloaded from the `Github repo`_.
 
 You can either clone the public repository:
 
