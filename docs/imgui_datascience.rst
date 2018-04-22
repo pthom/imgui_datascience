@@ -4,7 +4,6 @@ imgui\_datascience package
 Submodules
 ----------
 
-
 imgui\_datascience.imgui\_cv module
 -----------------------------------
 
