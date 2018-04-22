@@ -200,7 +200,7 @@ def show_one_feature(feature_function, feature_intro, default_open=False):
     flags = imgui.TREE_NODE_DEFAULT_OPEN if default_open else 0
     expanded, visible=imgui.collapsing_header(feature_intro, flags=flags)
     if expanded:
-        imgui_ext.push_font(imgui_ext.FontId.Arial_18)
+        imgui_ext.push_font(imgui_ext.FontId.Font_18)
         imgui.text(feature_intro)
         imgui_ext.pop_font()
         if feature_intro not in flag_show_code:

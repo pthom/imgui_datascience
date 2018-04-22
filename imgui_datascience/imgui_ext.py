@@ -8,17 +8,17 @@ this_script_dir = os.path.dirname(abspath(getsourcefile(lambda: 0)))
 
 
 class FontId(object):
-    Arial_10, Arial_14, Arial_18, Arial_22, Arial_26, Arial_30 = range(6)
+    Font_10, Font_14, Font_18, Font_22, Font_26, Font_30 = range(6)
 
     @staticmethod
     def all_fonts_dict():
         return OrderedDict([
-            ('Arial_10', FontId.Arial_10),
-            ('Arial_14', FontId.Arial_14),
-            ('Arial_18', FontId.Arial_18),
-            ('Arial_22', FontId.Arial_22),
-            ('Arial_26', FontId.Arial_26),
-            ('Arial_30', FontId.Arial_30)
+            ('Font_10', FontId.Font_10),
+            ('Font_14', FontId.Font_14),
+            ('Font_18', FontId.Font_18),
+            ('Font_22', FontId.Font_22),
+            ('Font_26', FontId.Font_26),
+            ('Font_30', FontId.Font_30)
         ])
 
 
@@ -55,7 +55,7 @@ def push_font(font_id):
 
 
 def push_default_font():
-    push_font(FontId.Arial_18)
+    push_font(FontId.Font_18)
 
 
 def pop_font():
@@ -66,12 +66,12 @@ def _load_fonts():
     global _ALL_LOADED_FONTS
     io = imgui.get_io()
     io.fonts.add_font_default()
-    _ALL_LOADED_FONTS[FontId.Arial_10] = _load_one_font(10)
-    _ALL_LOADED_FONTS[FontId.Arial_14] = _load_one_font(14)
-    _ALL_LOADED_FONTS[FontId.Arial_18] = _load_one_font(18)
-    _ALL_LOADED_FONTS[FontId.Arial_22] = _load_one_font(22)
-    _ALL_LOADED_FONTS[FontId.Arial_26] = _load_one_font(26)
-    _ALL_LOADED_FONTS[FontId.Arial_30] = _load_one_font(30)
+    _ALL_LOADED_FONTS[FontId.Font_10] = _load_one_font(10)
+    _ALL_LOADED_FONTS[FontId.Font_14] = _load_one_font(14)
+    _ALL_LOADED_FONTS[FontId.Font_18] = _load_one_font(18)
+    _ALL_LOADED_FONTS[FontId.Font_22] = _load_one_font(22)
+    _ALL_LOADED_FONTS[FontId.Font_26] = _load_one_font(26)
+    _ALL_LOADED_FONTS[FontId.Font_30] = _load_one_font(30)
     # _ALL_LOADED_FONTS[FontId.FontAwesome_30] = _LoadFontAwesome(30)
 
 
