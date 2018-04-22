@@ -40,6 +40,11 @@ setup(
     keywords='imgui_datascience',
     name='imgui_datascience',
     packages=find_packages(include=['imgui_datascience']),
+    entry_points={
+          'console_scripts': [
+              'my_project = my_project.__main__:main'
+          ]
+    },
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
