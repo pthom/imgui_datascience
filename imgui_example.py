@@ -161,7 +161,7 @@ is provided
 def demo_this_module_code():
     module = inspect.getmodule(demo_this_module_code)
     source = inspect.getsource(module)
-    imgui.input_text_multiline("", source, len(source) * 2, 750, 400)
+    imgui.input_text_multiline("", source, len(source) * 2, 700, 400)
     if imgui.button("Copy to clipboard"):
         def put_text_to_clipboard(text):
             try:
@@ -177,13 +177,22 @@ def demo_this_module_code():
         put_text_to_clipboard(source)
 
 
+@static_vars(flag_show_code = dict())
 def show_one_feature(feature_function, feature_intro, default_open=False):
+    flag_show_code = show_one_feature.statics.flag_show_code
     flags = imgui.TREE_NODE_DEFAULT_OPEN if default_open else 0
     expanded, visible=imgui.collapsing_header(feature_intro, flags=flags)
     if expanded:
         imgui_ext.push_font(imgui_ext.FontId.Arial_18)
         imgui.text(feature_intro)
         imgui_ext.pop_font()
+        if feature_intro not in flag_show_code:
+            flag_show_code[feature_intro] = False
+        imgui.same_line(imgui.get_window_width() - 150)
+        _, flag_show_code[feature_intro] = imgui.checkbox(imgui_ext.make_unique_label("View code"), flag_show_code[feature_intro])
+        if flag_show_code[feature_intro]:
+            code = inspect.getsource(feature_function)
+            imgui.input_text_multiline(imgui_ext.make_unique_empty_label(), code, len(code) * 2, 600, 200)
         feature_function()
 
 
