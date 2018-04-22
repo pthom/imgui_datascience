@@ -142,7 +142,6 @@ click on the link below
 
 https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be
 
-.. youtube:: https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be
 
 Credits
 =======
