@@ -13,7 +13,6 @@
         :target: https://imgui_datascience.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-
 .. image:: https://pyup.io/repos/github/pthom/imgui_datascience/shield.svg
      :target: https://pyup.io/repos/github/pthom/imgui_datascience/
      :alt: Updates
@@ -27,13 +26,10 @@ A set of utilities for data science using imgui.
 * Documentation: https://imgui_datascience.readthedocs.io.
 
 
-Features
---------
-
-* TODO
+.. include:: ../FEATURES.rst
 
 Credits
--------
+=======
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 

@@ -1,5 +1,11 @@
-Welcome (Py)ImGui for Data Science's documentation!
-======================================
+(Py)ImGui for Data Science
+==========================
+
+.. include:: ../FEATURES.rst
+
+
+Contents
+========
 
 .. toctree::
    :maxdepth: 2
@@ -18,3 +24,4 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
