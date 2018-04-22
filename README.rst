@@ -28,9 +28,9 @@ Acknowledgments
 
 This library is based on the two following projects:
 
-`Dear ImGui: https://github.com/ocornut/imgui`_ : an amazing 'Immediate Mode GUI' C++ library
+`Dear ImGui <https://github.com/ocornut/imgui>`_ : an amazing 'Immediate Mode GUI' C++ library
 
-`pyimgui: https://github.com/swistakm/pyimgui`_ : Python bindings for imgui (based on Cython).
+`pyimgui <https://github.com/swistakm/pyimgui>`_ : Python bindings for imgui (based on Cython).
 
 
 
