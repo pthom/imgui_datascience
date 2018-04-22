@@ -142,6 +142,40 @@ click on the link below
 
 https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be
 
+Gotchas
+=======
+
+Widget unique identifiers
+-------------------------
+Imgui identifies the widget through their label. If you have two buttons that have the same label,
+it might not differentiate them.
+
+A workaround is to add "##" + an id after your label
+
+Example::
+
+    if imgui.button("Click Me"):
+        print("Clicked first button")
+    if imgui.button("Click Me##2"):
+        print("Clicked second button")
+
+Another workaround is to use imgui_ext.make_unique_label
+
+Example::
+
+    if imgui.button(imgui_ext.make_unique_label("Click Me")):
+        print("Clicked first button")
+    if imgui.button(imgui_ext.make_unique_label("Click Me")):
+        print("Clicked second button")
+
+
+OpenGL
+------
+This lib makes a heavy usage of OpenGL : it transfers the images from the RAM to you graphic card at each frame.
+Some graphic cards may choke after a few minutes of usage. In this case, you might need to restart your application.
+
+This problem is under investigation (and may require to cache the non-mutated images between frames).
+
 
 Credits
 =======
