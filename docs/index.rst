@@ -1,7 +1,4 @@
-(Py)ImGui for Data Science
-==========================
-
-.. include:: ../FEATURES.rst
+.. include:: ../README.rst
 
 
 Contents
