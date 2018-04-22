@@ -104,6 +104,7 @@ You can run a full demo using either
 
 * Case 1 (from pip install)::
 
+    pip install imgui_datascience
     python -m imgui_datascience --example
 
 

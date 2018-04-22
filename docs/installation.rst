@@ -28,6 +28,7 @@ Note for python 2
 If you are targeting python 2, you might have to install python-dev and python-tk :
 
 .. code-block:: console
+
     $ sudo apt-get install python-tk python-dev
 
 
