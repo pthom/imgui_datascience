@@ -1,15 +1,16 @@
 from __future__ import division
+
+from . import *  # <=> i.e from imgui_datascience import *
+
 import cv2
 from collections import deque
-from imgui_datascience import *
-
 import os
 import inspect
 import numpy as np
 from timeit import default_timer
-
 from inspect import getsourcefile
 from os.path import abspath
+
 
 THIS_SCRIPT_DIR = os.path.dirname(abspath(getsourcefile(lambda: 0)))
 
@@ -25,7 +26,7 @@ def show_buttons():
     changed, statics.check = imgui.checkbox("checkbox", statics.check)
 
 
-@static_vars(img=cv2.imread(THIS_SCRIPT_DIR + "/flower.jpg"))
+@static_vars(img=cv2.imread(THIS_SCRIPT_DIR + "/images/flower.jpg"))
 def demo_image():
     imgui.text("This image is provided by opencv / numpy.")
     imgui.text("You can click on it to show it with its original size")
@@ -41,7 +42,7 @@ def make_contour_image(image):
 
 
 @static_vars(
-    img=cv2.imread(THIS_SCRIPT_DIR + "/billiard.jpg"),
+    img=cv2.imread(THIS_SCRIPT_DIR + "/images/billiard.jpg"),
     img_contours=None
 )
 def demo_image_explorer():
@@ -63,7 +64,7 @@ You can optionally link the zoom of two images (using the zoom_key param)
 def demo_image_lister():
     if not demo_image_lister.statics.inited:
         for name in ["owl", "billiard", "flower"]:
-            ImGuiImageLister.push_image(name, cv2.imread(THIS_SCRIPT_DIR + "/" + name + ".jpg"))
+            ImGuiImageLister.push_image(name, cv2.imread(THIS_SCRIPT_DIR + "/images/" + name + ".jpg"))
             demo_image_lister.statics.inited = True
     imgui.text("""The image lister enable to keep a list of images in a separate window for further examination
 Just call 'ImGuiImageLister.show_toggle_window_button()' somewhere in your code, 
@@ -257,10 +258,6 @@ def gui_loop():
     imgui.show_test_window()
 
 
-def main():
+def example():
     imgui_runner.run(gui_loop, imgui_runner.Params(windowed_full_screen=True, win_title="Dear Imgui !",
                                                    provide_default_window=False))
-
-
-if __name__ == "__main__":
-    main()
