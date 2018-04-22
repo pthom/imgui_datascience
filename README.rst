@@ -19,9 +19,19 @@
 
 A set of utilities for data science using python, imgui, numpy and opencv.
 
-
 * Free software: Apache Software License 2.0
 * Documentation: https://imgui_datascience.readthedocs.io.
+
+
+Acknowledgments
+===============
+
+This library is based on the two following projects:
+
+.. _Dear ImGui: https://github.com/ocornut/imgui : an amazing 'Immediate Mode GUI' C++ library
+.. _`pyimgui`: https://github.com/swistakm/pyimgui : quite advanced Python bindings for imgui (based on Cython)
+
+
 
 Install & test
 ==============
@@ -131,6 +141,7 @@ click on the link below
 
 https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be
 
+.. youtube:: https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be
 
 Credits
 =======
