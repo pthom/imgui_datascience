@@ -6,6 +6,7 @@ from . import imgui_fig
 from .imgui_image_lister import ImGuiImageLister
 from . import imgui_runner
 from .imgui_runner import ImGuiLister_ShowStandalone
+from .icons_fontawesome import IconsFontAwesome
 
 __author__ = """Pascal Thomet"""
 __email__ = 'pthomet@gmail.com'

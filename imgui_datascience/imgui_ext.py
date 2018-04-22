@@ -8,7 +8,7 @@ this_script_dir = os.path.dirname(abspath(getsourcefile(lambda: 0)))
 
 
 class FontId(object):
-    Font_10, Font_14, Font_18, Font_22, Font_26, Font_30 = range(6)
+    Font_10, Font_14, Font_18, Font_22, Font_26, Font_30, Font_Awesome = range(7)
 
     @staticmethod
     def all_fonts_dict():
@@ -18,7 +18,8 @@ class FontId(object):
             ('Font_18', FontId.Font_18),
             ('Font_22', FontId.Font_22),
             ('Font_26', FontId.Font_26),
-            ('Font_30', FontId.Font_30)
+            ('Font_30', FontId.Font_30),
+            ('Font_Awesome', FontId.Font_Awesome),
         ])
 
 
@@ -38,15 +39,14 @@ def _load_one_font(font_size, font_file="source-sans-pro.regular.ttf", font_dir=
     return font
 
 
-# def _LoadFontAwesome(font_size, font_file ="fontawesome-webfont.ttf", font_dir =""):
-#     io = imgui.get_io()
-#     if font_dir == "":
-#         font_dir = os.path.dirname(__file__)
-#
-#     icon_ranges = [IconsFontAwesome.ICON_MIN_FA, IconsFontAwesome.ICON_MAX_FA]
-#     # TypeError: Argument 'glyph_ranges' has incorrect type (expected imgui.core._StaticGlyphRanges, got list)
-#     font = io.fonts.add_font_from_file_ttf(font_dir + "/" + font_file, font_size, icon_ranges)
-#     return font
+def _LoadFontAwesome(font_size, font_file ="fontawesome-webfont.ttf", font_dir =""):
+    from .icons_fontawesome import IconsFontAwesome
+    io = imgui.get_io()
+    if font_dir == "":
+        font_dir = os.path.dirname(__file__)
+    glyph_range = imgui.core._StaticGlyphRanges(IconsFontAwesome.ICON_MIN_FA, IconsFontAwesome.ICON_MAX_FA)
+    font = io.fonts.add_font_from_file_ttf(font_dir + "/" + font_file, font_size, glyph_range)
+    return font
 
 
 def push_font(font_id):
@@ -72,7 +72,10 @@ def _load_fonts():
     _ALL_LOADED_FONTS[FontId.Font_22] = _load_one_font(22)
     _ALL_LOADED_FONTS[FontId.Font_26] = _load_one_font(26)
     _ALL_LOADED_FONTS[FontId.Font_30] = _load_one_font(30)
-    # _ALL_LOADED_FONTS[FontId.FontAwesome_30] = _LoadFontAwesome(30)
+
+    # _ALL_LOADED_FONTS[FontId.Font_Awesome] = _load_one_font(30, "fontawesome-webfont.ttf")
+    _ALL_LOADED_FONTS[FontId.Font_Awesome] = _LoadFontAwesome(30)
+    print("a")
 
 
 _ALL_UNIQUE_LABELS = []

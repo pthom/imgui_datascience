@@ -1,4 +1,5 @@
 from __future__ import division
+import fontawesome
 import cv2
 from collections import deque
 from imgui_datascience import *
@@ -38,6 +39,15 @@ def make_contour_image(image):
     normalized = np.float32(gray) / 255.
     edges = cv2.Sobel(normalized, -1, 1, 1, ksize=3) + 0.5
     return edges
+
+
+def demo_font_awesome():
+    imgui_ext.push_font(imgui_ext.FontId.Font_Awesome)
+    msg1 = fontawesome.icons['address-book']
+    msg2 = IconsFontAwesome.ICON_FA_ADDRESS_BOOK
+    imgui.button(msg1)
+    imgui.button(msg2)
+    imgui_ext.pop_font()
 
 
 @static_vars(
@@ -241,6 +251,7 @@ def gui_loop():
     imgui.set_next_window_size(750, 680, imgui.APPEARING)
     imgui.begin("ImGui for data scientists")
     show_fps()
+    # show_one_feature(demo_font_awesome, "Using font awesome for icons")
     show_one_feature(demo_image, "Using opencv images (numpy.ndarray)")
     show_one_feature(demo_figs, "Using matplotlib figures")
     show_one_feature(demo_image_explorer, "Using image explorer")
