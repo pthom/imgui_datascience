@@ -100,11 +100,25 @@ Code::
 Full demo
 --------
 
+You can run a full demo using either
 
-View the full demo (1'50") on youtube by clicking on the link below
+* Case 1 (from pip install)::
+
+    python -m imgui_datascience --example
+
+
+* Case 2 (from checkout)::
+
+    python run_example.py
+
+
+* View the full demo (1'50") on youtube
+
 
 .. image:: images/thumb.jpg
         :height: 100
+
+click on the link below
 
 https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be
 
