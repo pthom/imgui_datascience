@@ -32,6 +32,9 @@ This library is based on the two following projects:
 
 `pyimgui <https://github.com/swistakm/pyimgui>`_ : Python bindings for imgui (based on Cython).
 
+`imdebug, the image debugger <http://www.billbaxter.com/projects/imdebug/>`_ :a neat image debugger / viewing
+by William Baxter has provided some ideas for the image_explorer feature.
+
 Many thanks to their developers for their wonderful job.
 
 Install & test:
