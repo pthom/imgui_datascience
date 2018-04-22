@@ -32,10 +32,44 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    description="A set o",
-    install_requires=requirements,
+    package_data={
+        '': ['*.ttf', 'images/*.jpg', 'images/*.png'],
+    },
+    description="A set of utilities for data science using python, imgui, numpy and opencv",
+    install_requires=['imgui', 'opencv-python', 'imgui[pygame]', 'pyopengl', 'matplotlib','pygame'],
     license="Apache Software License 2.0",
-    long_description=readme + '\n\n' + history,
+    long_description="""
+
+A set of utilities for data science using python, imgui, numpy and opencv
+
+Features
+========
+
+View the full demo (1'50") on youtube: 
+
+https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be    
+
+Run it after install:
+
+python -m imgui_datascience --example
+
+
+Display numpy.ndarray (aka opencv image)
+----------------------------------------
+
+The following types are supported : RGB, RGBA, GRAY, float32, float64
+
+Display matplotlib figures
+--------------------------
+
+Inspect images
+--------------
+- show pixels color (or float values)
+- adjust visibility for float images
+- save images
+- zoom & pan (with possible sync between 2 images)
+    """,
+
     include_package_data=True,
     keywords='imgui_datascience',
     name='imgui_datascience',
@@ -49,6 +83,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/pthom/imgui_datascience',
-    version='0.1.1',
+    version='0.2.2',
     zip_safe=False,
 )

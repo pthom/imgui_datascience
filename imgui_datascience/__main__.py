@@ -1,5 +1,5 @@
 import sys
-import example
+from . import example
 
 def main(args=None):
     if args is None:

@@ -80,7 +80,7 @@ def demo_image_explorer_types():
     imgui.separator()
     statics = demo_image_explorer_types.statics
     if len(statics.imgs) == 0:
-        img = cv2.imread(THIS_SCRIPT_DIR + "/owl.jpg")
+        img = cv2.imread(THIS_SCRIPT_DIR + "/images/owl.jpg")
         img_grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         statics.imgs["RGB uint8"] = img
         statics.imgs["Gray uint8"] = img_grey
@@ -180,7 +180,7 @@ def demo_this_module_code():
 
 def demo_imguilister_standalone():
     def run_imguilister_standalone():
-        image = cv2.imread(THIS_SCRIPT_DIR + "/owl.jpg")
+        image = cv2.imread(THIS_SCRIPT_DIR + "/images/owl.jpg")
         ImGuiImageLister.push_image("owl", image)
         ImGuiLister_ShowStandalone()
 
