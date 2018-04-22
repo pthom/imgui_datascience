@@ -158,7 +158,11 @@ def image(img, width=None, height=None, title="", image_adjustments=ImageAdjustm
 
 def _is_in_image(pixel, image_shape):
     # type : (imgui.Vec2, shape) -> Bool
-    return pixel.x >= 0 and image_shape[1] > 0 <= pixel.y < image_shape[0]
+    w = image_shape[1]
+    h = image_shape[0]
+    x = pixel.x
+    y = pixel.y
+    return x >= 0 and x < w and y >= 0 and y < h
 
 
 def _is_in_last_image(pixel):
