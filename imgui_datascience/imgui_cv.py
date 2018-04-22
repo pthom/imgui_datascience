@@ -152,7 +152,9 @@ def _image_impl(img, image_adjustments, width=None, height=None, title=""):
     return mouse_position_last_image()
 
 
-def image(img, width=None, height=None, title="", image_adjustments=ImageAdjustments()):
+def image(img, width=None, height=None, title="", image_adjustments=None):
+    if image_adjustments is None:
+        image_adjustments = ImageAdjustments()
     return _image_impl(img, image_adjustments, width=width, height=height, title=title)
 
 
@@ -192,7 +194,7 @@ def is_mouse_hovering_last_image():  # only works if the image was presented in 
 
 
 def image_explorer(image, width=None, height=None, title="", zoom_key="", hide_buttons=False,
-                   image_adjustments=ImageAdjustments()):
+                   image_adjustments=None):
     """
     :param image_adjustments:
     :param hide_buttons:
@@ -203,6 +205,8 @@ def image_explorer(image, width=None, height=None, title="", zoom_key="", hide_b
     :param zoom_key: Set the same zoom_key for two image if you want to link their zoom settings
     :return: mouse location in image coordinates (None if the mouse is outside of the image)
     """
+    if image_adjustments is None:
+        image_adjustments = ImageAdjustments()
     from ._imgui_cv_zoom import image_explorer_autostore_zoominfo
     viewport_size = _image_viewport_size(image, width, height)
     imgui.begin_group()

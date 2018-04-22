@@ -80,7 +80,9 @@ class ZoomInfo:
 
 class ImageWithZoomInfo:
     def __init__(self, image, viewport_size, zoom_info=None, hide_buttons=False,
-                 image_adjustments=imgui_cv.ImageAdjustments()):
+                 image_adjustments=None):
+        if image_adjustments is None:
+            image_adjustments = imgui_cv.ImageAdjustments()
         self.image = image
         self.original_viewport_size = viewport_size
         self.force_viewport_size = False
@@ -171,12 +173,10 @@ def color_msg(color):
 
 # noinspection PyArgumentList,PyArgumentList
 def image_explorer_impl(im, title=""):
-    # type: (ImageWithZoomInf, str) -> None
+    # type: (ImageWithZoomInfo, str) -> None
     """
     :return: imgui.Vec2 (mouse_location_original_image) or None (if not on image)
     """
-    def make_unique_label_im(label):
-        return imgui_ext.make_unique_label(label, str(id(im.image)))
 
     if im.image.size == 0:
         imgui.text("empty image !")
@@ -256,7 +256,7 @@ def image_explorer_impl(im, title=""):
         im.hide_buttons = False
 
     def show_zoom_button(name, action, same_line=True):
-        if imgui.small_button(make_unique_label_im(name)):
+        if imgui.small_button(imgui_ext.make_unique_label(name)):
             action()
         if same_line:
             imgui.same_line()
@@ -275,7 +275,7 @@ def image_explorer_impl(im, title=""):
         if im.is_not_full_view():
             show_zoom_button("full view", perform_full_view)
         if not im.show_adjustments:
-            if imgui.small_button(make_unique_label_im("Adjust")):
+            if imgui.small_button(imgui_ext.make_unique_label("Adjust")):
                 im.show_adjustments = True
         # adjustments
         if im.show_adjustments:
@@ -285,17 +285,17 @@ def image_explorer_impl(im, title=""):
             imgui.push_item_width(80)
             # noinspection PyArgumentList
             changed, im.image_adjustments.factor = imgui.slider_float(
-                make_unique_label_im("k"), im.image_adjustments.factor, 0., 32., display_format="%.3f", power=5.)
+                imgui_ext.make_unique_label("k"), im.image_adjustments.factor, 0., 32., display_format="%.3f", power=5.)
             imgui.same_line()
             imgui.push_item_width(80)
             changed, im.image_adjustments.delta = imgui.slider_float(
-                make_unique_label_im("delta"), im.image_adjustments.delta, 0., 255., display_format="%.3f", power=5.)
+                imgui_ext.make_unique_label("delta"), im.image_adjustments.delta, 0., 255., display_format="%.3f", power=5.)
             imgui.same_line()
             if not im.image_adjustments.is_none():
-                if imgui.small_button(make_unique_label_im("reset")):
+                if imgui.small_button(imgui_ext.make_unique_label("reset")):
                     im.image_adjustments = imgui_cv.ImageAdjustments()
             imgui.same_line()
-            if imgui.small_button(make_unique_label_im("hide adjust")):
+            if imgui.small_button(imgui_ext.make_unique_label("hide adjust")):
                 im.show_adjustments = False
         # Show image info
         image_type_msg = str(im.image.dtype) + str(im.image.shape)
