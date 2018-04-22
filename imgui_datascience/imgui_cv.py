@@ -1,4 +1,5 @@
 import cv2
+import xxhash
 import numpy as np
 import imgui
 import OpenGL.GL as gl
@@ -29,6 +30,48 @@ class ImageAdjustments:
         else:
             adjusted = ((image + self.delta) * self.factor).astype(image.dtype)
             return adjusted
+
+    def __hash__(self):
+        return hash((self.factor, self.delta))
+
+
+def _hash_image(image):
+    # cf https://stackoverflow.com/questions/16589791/most-efficient-property-to-hash-for-numpy-array
+    h = xxhash.xxh64()
+    h.update(image)
+    result = h.intdigest()
+    h.reset()
+    return result
+
+    # rng = np.random.RandomState(89)
+    # inds = rng.randint(low=0, high=image.size, size=50)
+    # b = image.flat[inds]
+    # # b.flags.writeable = False
+    # result =  hash(tuple(b.data))
+    # return result
+
+class ImageAndAdjustments:
+    def __init__(self, image, image_adjustments):
+        self.image = image
+        self.image_adjustments = image_adjustments
+
+    def adjusted_image(self):
+        return self.image_adjustments.adjust(self.image)
+
+    def __hash__(self):
+        hash_adjust = hash(self.image_adjustments)
+        hash_image = _hash_image(self.image)
+        result = hash((hash_adjust, hash_image))
+        return result
+
+    def __eq__(self, other):
+        """
+        For performance reasons, the __eq__ operator is made to take only the hash into account.
+        @see _image_to_texture()
+        """
+        hash1 = hash(self)
+        hash2 = hash(other)
+        return hash1 == hash2
 
 
 class SizePixel:
@@ -71,14 +114,13 @@ def _to_rgb_image(img):
     return img_rgb
 
 
-# inspired from https://www.programcreek.com/python/example/95539/OpenGL.GL.glPixelStorei (example 3)
-@static_vars(all_cv_textures=[])
-def _image_to_texture(img, image_adjustments):
-    img_adjusted = image_adjustments.adjust(img)
-    img_rgb = _to_rgb_image(img_adjusted)
-
-    width = img.shape[1]
-    height = img.shape[0]
+def _image_rgb_to_texture_impl(img_rgb):
+    """
+    Performs the actual transfer to the gpu and returns a texture_id
+    """
+    # inspired from https://www.programcreek.com/python/example/95539/OpenGL.GL.glPixelStorei (example 3)
+    width = img_rgb.shape[1]
+    height = img_rgb.shape[0]
     texture_id = gl.glGenTextures(1)
     gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
     gl.glBindTexture(gl.GL_TEXTURE_2D, texture_id)
@@ -87,14 +129,52 @@ def _image_to_texture(img, image_adjustments):
     gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_LINEAR)
     gl.glTexImage2D(gl.GL_TEXTURE_2D, 0, gl.GL_RGB, width, height, 0, gl.GL_BGR, gl.GL_UNSIGNED_BYTE, img_rgb)
     gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
-
-    _image_to_texture.statics.all_cv_textures.append(texture_id)
     return texture_id
 
 
+# ALL_TEXTURES contains a dict of all the images that were transferred to the GPU
+# plus their last access time
+ALL_TEXTURES = {}
+
+
+def _image_to_texture(image_and_adjustments):
+    """
+    _image_to_texture will transfer the image to the GPU and return a texture Id
+    Some GPU might choke if too many textures are transferred.
+    For this reason :
+      - a cache is maintained (ALL_TEXTURES)
+      - a quick comparison is made before the transfer:
+      @see _hash_image()
+      @see ImageAndAdjustments.__eq__() : for performance reasons, the __eq__ operator
+      is made to take only the hash into account.
+    :param image_and_adjustments:
+    :return: texture_id
+    """
+    if image_and_adjustments not in ALL_TEXTURES:
+        img_adjusted = image_and_adjustments.adjusted_image()
+        img_rgb = _to_rgb_image(img_adjusted)
+        ALL_TEXTURES[image_and_adjustments] = [_image_rgb_to_texture_impl(img_rgb), timer()]
+        print("Added one texture, len=" + str(len(ALL_TEXTURES)))
+    texture_and_time = ALL_TEXTURES[image_and_adjustments]
+    texture_and_time[1] = timer() # update this texture last usage time
+    return texture_and_time[0]
+
+
 def _clear_all_cv_textures():
-    gl.glDeleteTextures(_image_to_texture.statics.all_cv_textures)
-    _image_to_texture.statics.all_cv_textures = []
+    global ALL_TEXTURES
+    all_textures_updated = {}
+    textures_to_delete = []
+    now = timer()
+    for id, texture_and_time in ALL_TEXTURES.items():
+        age_seconds = now - texture_and_time[1]
+        if age_seconds < 1.:
+            all_textures_updated[id] = texture_and_time
+        else:
+            textures_to_delete.append(texture_and_time[0])
+    ALL_TEXTURES = all_textures_updated
+    if len(textures_to_delete) > 0:
+        gl.glDeleteTextures(textures_to_delete)
+        print("Delete {0} old texture(s), len={1}".format(len(textures_to_delete), len(ALL_TEXTURES)))
 
 
 def _image_viewport_size(image, width=None, height=None):
@@ -115,23 +195,23 @@ def _image_viewport_size(image, width=None, height=None):
     zoomed_status={},
     zoom_click_times={},
     last_shown_image=None)
-def _image_impl(img, image_adjustments, width=None, height=None, title=""):
+def _image_impl(image_and_ajustments, width=None, height=None, title=""):
     statics = _image_impl.statics
-    statics.last_shown_image = img
+    statics.last_shown_image = image_and_ajustments
     zoom_key = imgui_ext.make_unique_label(title)
     if zoom_key not in statics.zoomed_status:
         statics.zoom_click_times[zoom_key] = 0
         statics.zoomed_status[zoom_key] = False
     if statics.zoomed_status[zoom_key]:
-        viewport_size = SizePixel.from_image(img)
+        viewport_size = SizePixel.from_image(image_and_ajustments.image)
     else:
-        viewport_size = _image_viewport_size(img, width, height)
+        viewport_size = _image_viewport_size(image_and_ajustments.image, width, height)
 
     if zoom_key not in statics.zoomed_status:
         statics.zoomed_status[zoom_key] = False
         statics.zoom_click_times[zoom_key] = timer()
 
-    texture_id = _image_to_texture(img, image_adjustments)
+    texture_id = _image_to_texture(image_and_ajustments)
     if title == "":
         imgui.image_button(texture_id, viewport_size.width, viewport_size.height, frame_padding=0)
         is_mouse_hovering = imgui.is_item_hovered_rect()
@@ -155,7 +235,8 @@ def _image_impl(img, image_adjustments, width=None, height=None, title=""):
 def image(img, width=None, height=None, title="", image_adjustments=None):
     if image_adjustments is None:
         image_adjustments = ImageAdjustments()
-    return _image_impl(img, image_adjustments, width=width, height=height, title=title)
+    image_and_ajustments = ImageAndAdjustments(img, image_adjustments)
+    return _image_impl(image_and_ajustments, width=width, height=height, title=title)
 
 
 def _is_in_image(pixel, image_shape):
@@ -168,7 +249,7 @@ def _is_in_image(pixel, image_shape):
 
 
 def _is_in_last_image(pixel):
-    last_image_shape = _image_impl.statics.last_shown_image.shape
+    last_image_shape = _image_impl.statics.last_shown_image.image.shape
     return _is_in_image(pixel, last_image_shape)
 
 
