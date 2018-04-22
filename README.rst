@@ -34,10 +34,11 @@ This library is based on the two following projects:
 
 Many thanks to their developers for their wonderful job.
 
-Install & test
+Install & test:
 ==============
 
-.. code-block:: python
+Code::
+
     pip install imgui_datascience
     python -m imgui_datascience --example
 
@@ -48,7 +49,8 @@ Display numpy.ndarray (aka opencv image)
 ----------------------------------------
 The following types are supported : ``RGB, RGBA, GRAY, float32, float64``
 
-.. code-block:: python
+Code::
+
     # returns mouse_position
     imgui_cv.image(img, height=150, title="flowers")
 
@@ -58,7 +60,8 @@ Display matplotlib figures
     .. image:: images/mplot.jpg
         :height: 200
 
-.. code-block:: python
+Code::
+
     figure = matplotlib.pyplot.figure()
     x = numpy.arange(0.1, 100, 0.1)
     y = numpy.sin(x) / x
@@ -79,7 +82,8 @@ Inspect images
 
 See https://www.youtube.com/watch?v=yKw7VaQNFCI&feature=youtu.be for an animated demo.
 
-.. code-block:: python
+Code::
+
     imgui_cv.image_explorer(img)
 
 
@@ -88,7 +92,8 @@ A simple way to run imgui programs
 
 The simplest way to run a program a start adding gui buttons is shown below
 
-.. code-block:: python
+Code::
+    
     def gui_loop():
         imgui.button("Click me")
 
@@ -101,7 +106,8 @@ A simple way to quickly inspect images
 
 Below is the simplest to quickly display any type of numpy array (RGB, float, etc) and to be able to inspect it.
 
-.. code-block:: python
+Code::
+
         image = ... # cv2.imread("...")
         ImGuiImageLister.push_image("owl", image)
         ImGuiLister_ShowStandalone()
@@ -116,7 +122,8 @@ You can run a full demo using either
 
 * Case 1 (from pip install):
 
-.. code-block:: python
+Code::
+
     pip install imgui_datascience
     python -m imgui_datascience --example
 
@@ -124,12 +131,11 @@ You can run a full demo using either
 
 * Case 2 (from checkout):
 
-.. code-block:: python
+Code::
     python run_example.py
 
 
 * View the full demo (1'50") on youtube
-
 
 .. image:: images/thumb.jpg
         :height: 100
@@ -148,19 +154,17 @@ it might not differentiate them.
 
 A workaround is to add "##" + an id after your label
 
-Example:
+Code::
 
-.. code-block:: python
- if imgui.button("Click Me"):
+    if imgui.button("Click Me"):
         print("Clicked first button")
     if imgui.button("Click Me##2"):
         print("Clicked second button")
 
 Another workaround is to use imgui_ext.make_unique_label
 
-Example:
+Code::
 
-.. code-block:: python
     if imgui.button(imgui_ext.make_unique_label("Click Me")):
         print("Clicked first button")
     if imgui.button(imgui_ext.make_unique_label("Click Me")):
