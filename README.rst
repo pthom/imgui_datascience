@@ -96,7 +96,7 @@ A simple way to run imgui programs
 The simplest way to run a program a start adding gui buttons is shown below
 
 Code::
-    
+
     def gui_loop():
         imgui.button("Click me")
 
@@ -177,10 +177,13 @@ Code::
 OpenGL
 ------
 This lib makes a heavy usage of OpenGL : it transfers the images from the RAM to you graphic card at each frame.
-Some graphic cards may choke after a few minutes of usage. In this case, you might need to restart your application.
+The image textures are cached and only recreated if the image data has changed.
 
-This problem is under investigation (and may require to cache the non-mutated images between frames).
+The library will detect that an image has changed by using a hash of its data. Two hash variant are possible :
+* if imgui_cv.USE_FAST_HASH is set to True (which is default) : select 100 random pixels and hash them
+* otherwise, compute the hash of the whole image data (using xxhash for performance)
 
+You can change imgui_cv.USE_FAST_HASH value in order to change the behavior if needed.
 
 Credits
 =======
