@@ -36,7 +36,7 @@ setup(
         '': ['*.ttf', 'images/*.jpg', 'images/*.png'],
     },
     description="A set of utilities for data science using python, imgui, numpy and opencv",
-    install_requires=['imgui', 'opencv-python', 'imgui[pygame]', 'pyopengl', 'matplotlib','pygame', 'enum34'],
+    install_requires=['imgui', 'opencv-python', 'imgui[pygame]', 'pyopengl', 'matplotlib','pygame', 'enum34', 'xxhash'],
     license="Apache Software License 2.0",
     long_description="""
 
