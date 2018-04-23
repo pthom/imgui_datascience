@@ -1,4 +1,5 @@
 import cv2
+import copy
 import xxhash
 import numpy as np
 import imgui
@@ -37,18 +38,18 @@ class ImageAdjustments:
 
 def _hash_image(image):
     # cf https://stackoverflow.com/questions/16589791/most-efficient-property-to-hash-for-numpy-array
-    h = xxhash.xxh64()
-    h.update(image)
-    result = h.intdigest()
-    h.reset()
-    return result
-
-    # rng = np.random.RandomState(89)
-    # inds = rng.randint(low=0, high=image.size, size=50)
-    # b = image.flat[inds]
-    # # b.flags.writeable = False
-    # result =  hash(tuple(b.data))
+    # h = xxhash.xxh64()
+    # h.update(image)
+    # result = h.intdigest()
+    # h.reset()
     # return result
+
+    rng = np.random.RandomState(89)
+    inds = rng.randint(low=0, high=image.size, size=100)
+    b = image.flat[inds]
+    # b.flags.writeable = False
+    result =  hash(tuple(b.data))
+    return result
 
 class ImageAndAdjustments:
     def __init__(self, image, image_adjustments):
@@ -151,9 +152,11 @@ def _image_to_texture(image_and_adjustments):
     :return: texture_id
     """
     if image_and_adjustments not in ALL_TEXTURES:
-        img_adjusted = image_and_adjustments.adjusted_image()
+        image_and_adjustments_copy = copy.deepcopy(image_and_adjustments)
+        img_adjusted = image_and_adjustments_copy.adjusted_image()
         img_rgb = _to_rgb_image(img_adjusted)
-        ALL_TEXTURES[image_and_adjustments] = [_image_rgb_to_texture_impl(img_rgb), timer()]
+        texture_id = _image_rgb_to_texture_impl(img_rgb)
+        ALL_TEXTURES[image_and_adjustments_copy] = [texture_id, timer()]
         print("Added one texture, len=" + str(len(ALL_TEXTURES)))
     texture_and_time = ALL_TEXTURES[image_and_adjustments]
     texture_and_time[1] = timer() # update this texture last usage time
@@ -167,7 +170,7 @@ def _clear_all_cv_textures():
     now = timer()
     for id, texture_and_time in ALL_TEXTURES.items():
         age_seconds = now - texture_and_time[1]
-        if age_seconds < 1.:
+        if age_seconds < 0.3:
             all_textures_updated[id] = texture_and_time
         else:
             textures_to_delete.append(texture_and_time[0])
