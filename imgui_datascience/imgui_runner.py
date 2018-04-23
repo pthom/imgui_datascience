@@ -3,6 +3,9 @@ import imgui
 from . import imgui_ext
 from .imgui_image_lister import ImGuiImageLister
 from . import imgui_cv
+from .static_vars import static_vars
+from collections import deque
+from timeit import default_timer
 
 import os
 
@@ -11,6 +14,19 @@ import OpenGL.GL as gl
 
 from imgui.integrations.pygame import PygameRenderer
 import imgui
+
+@static_vars(last_call_times=deque())
+def compute_fps():
+    statics = compute_fps.statics
+    now = default_timer()
+    statics.last_call_times.append(now)
+    window_length = 24 # the computed fps is the average for the last 24 frames
+    if len(statics.last_call_times) > window_length:
+        last = statics.last_call_times.popleft()
+        fps = float(window_length) / (now - last)
+    else:
+        fps = 0
+    return fps
 
 
 class Params:

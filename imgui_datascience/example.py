@@ -214,25 +214,11 @@ def show_one_feature(feature_function, feature_intro, default_open=False):
         feature_function()
 
 
-@static_vars(last_call_times=deque())
-def compute_fps():
-    statics = compute_fps.statics
-    now = default_timer()
-    statics.last_call_times.append(now)
-    window_length = 24 # the computed fps is the average for the last 24 frames
-    if len(statics.last_call_times) > window_length:
-        last = statics.last_call_times.popleft()
-        fps = float(window_length) / (now - last)
-    else:
-        fps = 0
-    return fps
-
-
 def show_fps():
     imgui.set_next_window_position(0, 0, imgui.APPEARING)
     imgui.set_next_window_size(100, 40, imgui.APPEARING)
     imgui.begin("FPS")
-    msg = "{0:.1f}".format(compute_fps())
+    msg = "{0:.1f}".format(imgui_runner.compute_fps())
     imgui.text(msg)
     imgui.end()
 
