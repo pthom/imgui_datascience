@@ -166,7 +166,7 @@ def _image_to_texture(image_and_adjustments):
         img_rgb = _to_rgb_image(img_adjusted)
         texture_id = _image_rgb_to_texture_impl(img_rgb)
         ALL_TEXTURES[image_and_adjustments_copy] = [texture_id, timer()]
-        print("Added one texture, len=" + str(len(ALL_TEXTURES)))
+        # print("Added one texture, len=" + str(len(ALL_TEXTURES)))
     texture_and_time = ALL_TEXTURES[image_and_adjustments]
     texture_and_time[1] = timer() # update this texture last usage time
     return texture_and_time[0]
@@ -186,7 +186,7 @@ def _clear_all_cv_textures():
     ALL_TEXTURES = all_textures_updated
     if len(textures_to_delete) > 0:
         gl.glDeleteTextures(textures_to_delete)
-        print("Delete {0} old texture(s), len={1}".format(len(textures_to_delete), len(ALL_TEXTURES)))
+        # print("Delete {0} old texture(s), len={1}".format(len(textures_to_delete), len(ALL_TEXTURES)))
 
 
 def _image_viewport_size(image, width=None, height=None):
