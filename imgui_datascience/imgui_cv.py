@@ -11,6 +11,7 @@ import math
 
 _start = timer()
 
+USE_FAST_HASH = True
 
 def _is_close(a, b):
     return math.fabs(a - b) < 1E-6
@@ -37,19 +38,27 @@ class ImageAdjustments:
 
 
 def _hash_image(image):
-    # cf https://stackoverflow.com/questions/16589791/most-efficient-property-to-hash-for-numpy-array
-    # h = xxhash.xxh64()
-    # h.update(image)
-    # result = h.intdigest()
-    # h.reset()
-    # return result
+    """
+    Two hash variant are possible :
+    - if imgui_cv.USE_FAST_HASH is True : select 100 random pixels and hash them
+    - otherwise : compute the hash of the whole image (using xxhash for performance)
+    :param image:
+    :return:hash
+    """
+    if USE_FAST_HASH:
+        rng = np.random.RandomState(89)
+        inds = rng.randint(low=0, high=image.size, size=100)
+        b = image.flat[inds]
+        result = hash(tuple(b.data))
+        return result
+    else:
+        # cf https://stackoverflow.com/questions/16589791/most-efficient-property-to-hash-for-numpy-array
+        h = xxhash.xxh64()
+        h.update(image)
+        result = h.intdigest()
+        h.reset()
+        return result
 
-    rng = np.random.RandomState(89)
-    inds = rng.randint(low=0, high=image.size, size=100)
-    b = image.flat[inds]
-    # b.flags.writeable = False
-    result =  hash(tuple(b.data))
-    return result
 
 class ImageAndAdjustments:
     def __init__(self, image, image_adjustments):
