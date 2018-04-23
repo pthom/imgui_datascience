@@ -180,6 +180,7 @@ This lib makes a heavy usage of OpenGL : it transfers the images from the RAM to
 The image textures are cached and only recreated if the image data has changed.
 
 The library will detect that an image has changed by using a hash of its data. Two hash variant are possible :
+
 * if imgui_cv.USE_FAST_HASH is set to True (which is default) : select 100 random pixels and hash them
 * otherwise, compute the hash of the whole image data (using xxhash for performance)
 
