@@ -1,7 +1,4 @@
 from __future__ import division
-
-from . import *  # <=> i.e from imgui_datascience import *
-
 import cv2
 from collections import deque
 import os
@@ -10,6 +7,12 @@ import numpy as np
 from timeit import default_timer
 from inspect import getsourcefile
 from os.path import abspath
+
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot
+
+from . import *  # <=> i.e from imgui_datascience import *
 
 
 THIS_SCRIPT_DIR = os.path.dirname(abspath(getsourcefile(lambda: 0)))
@@ -94,7 +97,6 @@ def demo_image_explorer_types():
 
 
 def make_figure():
-    import matplotlib
     import numpy
     figure = matplotlib.pyplot.figure()
     plot = figure.add_subplot(111)

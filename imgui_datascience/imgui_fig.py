@@ -1,7 +1,6 @@
 import numpy
-import matplotlib
-import matplotlib.pyplot
 import cv2
+import matplotlib
 from . import imgui_cv
 from .static_vars import static_vars
 
@@ -24,5 +23,18 @@ def _fig_to_image(figure):
 
 
 def fig(figure, width=None, height=None, title=""):
+    """
+    imgui_fig.fig will display a matplotlib figure
+
+    Note: this might fail on OSX, with the following message ::
+
+        AttributeError: 'FigureCanvasMac' object has no attribute 'renderer'
+
+    In this case, simply change the renderer to Tk, like this::
+
+        import matplotlib
+        matplotlib.use('TkAgg')  # this has to be done *before* importing pyplot
+        import matplotlib.pyplot
+    """
     image = _fig_to_image(figure)
     return imgui_cv.image(image, width=width, height=height, title=title)
