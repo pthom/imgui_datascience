@@ -1,4 +1,4 @@
-matplotlib==2.2.3
+matplotlib==3.0.2
 opencv-python==3.4.0.14
 imgui[pygame]==0.1.0
 enum34==1.1.6
