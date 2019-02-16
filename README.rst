@@ -12,11 +12,6 @@
         :target: https://imgui_datascience.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
-.. image:: https://pyup.io/repos/github/pthom/imgui_datascience/shield.svg
-     :target: https://pyup.io/repos/github/pthom/imgui_datascience/
-     :alt: Updates
-
-
 A set of utilities for data science using python, imgui, numpy and opencv.
 
 * Free software: Apache Software License 2.0

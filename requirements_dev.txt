@@ -1,11 +1,11 @@
 -r requirements.txt
-bumpversion==0.5.3
-wheel==0.31.0
-watchdog==0.8.3
-flake8==3.5.0
-tox==3.0.0
-coverage==4.5.1
-Sphinx==1.7.4
-twine==1.11.0
-pytest==3.5.1
-pytest-runner==4.2
+bumpversion
+wheel
+watchdog
+flake8
+tox
+coverage
+Sphinx
+twine
+pytest
+pytest-runner
