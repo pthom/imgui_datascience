@@ -2,9 +2,6 @@
 ===============================================================================
 
 
-.. image:: https://img.shields.io/pypi/v/imgui_datascience.svg
-        :target: https://pypi.python.org/pypi/imgui_datascience
-
 .. image:: https://img.shields.io/travis/pthom/imgui_datascience.svg
         :target: https://travis-ci.org/pthom/imgui_datascience
 
