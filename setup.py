@@ -45,9 +45,9 @@ A set of utilities for data science using python, imgui, numpy and opencv
 Features
 ========
 
-View the full demo (1'50") on youtube: 
+View the full demo (1'50") on youtube:
 
-https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be    
+https://www.youtube.com/watch?v=qstEZyLGsTQ&feature=youtu.be
 
 Run it after install:
 
@@ -83,6 +83,6 @@ Inspect images
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/pthom/imgui_datascience',
-    version='0.2.9',
+    version='0.2.10',
     zip_safe=False,
 )

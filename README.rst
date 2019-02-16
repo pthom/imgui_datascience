@@ -36,9 +36,12 @@ Install & test:
 ==============
 
 Code::
-
-    pip install imgui_datascience
-    python -m imgui_datascience --example
+    git clone https://github.com/pthom/imgui_datascience.git
+    cd imgui_datascience
+    virtualenv env -p python3
+    source env/bin/activate
+    pip install -r requirements.txt
+    python run_example.py
 
 Features
 ========
