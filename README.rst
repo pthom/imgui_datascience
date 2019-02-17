@@ -15,7 +15,7 @@ A set of utilities for data science using python, imgui, numpy and opencv.
 * Documentation: https://imgui_datascience.readthedocs.io.
 * Demo:
 
-.. image:: https://img.youtube.com/vi/qstEZyLGsTQ/0.jpg
+.. image:: images/yt.png
         :target: https://youtu.be/qstEZyLGsTQ
         :alt: Demo on YouTube
 
