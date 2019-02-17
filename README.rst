@@ -17,6 +17,7 @@ A set of utilities for data science using python, imgui, numpy and opencv.
 
 .. image:: images/yt.png
         :target: https://youtu.be/qstEZyLGsTQ
+        :width: 200
         :alt: Demo on YouTube
 
 Compatible with python 2 and python3.
