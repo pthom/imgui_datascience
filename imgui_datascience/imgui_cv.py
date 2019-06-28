@@ -226,11 +226,11 @@ def _image_impl(image_and_ajustments, width=None, height=None, title=""):
     texture_id = _image_to_texture(image_and_ajustments)
     if title == "":
         imgui.image_button(texture_id, viewport_size.width, viewport_size.height, frame_padding=0)
-        is_mouse_hovering = imgui.is_item_hovered_rect()
+        is_mouse_hovering = imgui.is_item_hovered()
     else:
         imgui.begin_group()
         imgui.image_button(texture_id, viewport_size.width, viewport_size.height, frame_padding=0)
-        is_mouse_hovering = imgui.is_item_hovered_rect()
+        is_mouse_hovering = imgui.is_item_hovered()
         imgui.text(title)
         imgui.end_group()
 

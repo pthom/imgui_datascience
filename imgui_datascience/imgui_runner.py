@@ -50,6 +50,7 @@ def run(gui_loop_function, params=Params()):
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (
             params.windowed_full_screen_x_margin / 2, params.window_title_height)
 
+    imgui.create_context()
     pygame.init()
     pygame.display.set_caption(params.win_title)
     win_size = params.win_size
@@ -64,14 +65,14 @@ def run(gui_loop_function, params=Params()):
     io = imgui.get_io()
     io.display_size = win_size
 
-    renderer = PygameRenderer()
+    pygame_renderer = PygameRenderer()
 
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
 
-            renderer.process_event(event)
+            pygame_renderer.process_event(event)
 
         imgui.new_frame()
         if params.provide_default_window:
@@ -88,7 +89,7 @@ def run(gui_loop_function, params=Params()):
         gl.glClearColor(1, 1, 1, 1)
         gl.glClear(gl.GL_COLOR_BUFFER_BIT)
         imgui.render()
-
+        pygame_renderer.render(imgui.get_draw_data())
         pygame.display.flip()
 
         imgui_cv._clear_all_cv_textures()
