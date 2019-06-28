@@ -9,6 +9,6 @@ from .imgui_runner import ImGuiLister_ShowStandalone
 
 __author__ = """Pascal Thomet"""
 __email__ = 'pthomet@gmail.com'
-__version__ = '0.2.10'
+__version__ = '0.3.1'
 
 from .static_vars import *
