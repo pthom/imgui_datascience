@@ -160,12 +160,12 @@ def color_msg(color):
     else:
         if len(color) == 3:
             bgr = color
-            imgui.color_button(bgr[2] / 255., bgr[1] / 255., bgr[0] / 255.)
+            imgui.color_button("", bgr[2] / 255., bgr[1] / 255., bgr[0] / 255.)
             imgui.same_line()
             msg = "RGB({0},{1},{2})".format(bgr[2], bgr[1], bgr[0])
         elif len(color) == 4:
             bgra = color
-            imgui.color_button(bgra[2] / 255., bgra[1] / 255., bgra[0] / 255., bgra[3])
+            imgui.color_button("", bgra[2] / 255., bgra[1] / 255., bgra[0] / 255., bgra[3])
             imgui.same_line()
             msg = "RGBA({0},{1},{2},{3})".format(bgra[2], bgra[1], bgra[0], bgra[3])
     return msg
@@ -285,11 +285,11 @@ def image_explorer_impl(im, title=""):
             imgui.push_item_width(80)
             # noinspection PyArgumentList
             changed, im.image_adjustments.factor = imgui.slider_float(
-                imgui_ext.make_unique_label("k"), im.image_adjustments.factor, 0., 32., display_format="%.3f", power=5.)
+                imgui_ext.make_unique_label("k"), im.image_adjustments.factor, 0., 32., format="%.3f", power=5.)
             imgui.same_line()
             imgui.push_item_width(80)
             changed, im.image_adjustments.delta = imgui.slider_float(
-                imgui_ext.make_unique_label("delta"), im.image_adjustments.delta, 0., 255., display_format="%.3f", power=5.)
+                imgui_ext.make_unique_label("delta"), im.image_adjustments.delta, 0., 255., format="%.3f", power=5.)
             imgui.same_line()
             if not im.image_adjustments.is_none():
                 if imgui.small_button(imgui_ext.make_unique_label("reset")):
