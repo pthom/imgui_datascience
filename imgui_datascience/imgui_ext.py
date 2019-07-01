@@ -25,16 +25,17 @@ class FontId(object):
 _ALL_LOADED_FONTS = {}
 
 
-def _load_one_font(font_size, font_file="source-sans-pro.regular.ttf", font_dir=this_script_dir):
+def _load_one_font(font_size, font_file="source-sans-pro.regular.ttf"):
     io = imgui.get_io()
-    if font_dir == "":
-        font_dir = "./"
-        if not os.path.exists(font_dir + "/" + font_file):
-            font_dir = os.path.dirname(__file__)
+    font_full_path = ""
+    font_dirs = [this_script_dir, "./", "./fonts/"]
+    for font_dir in font_dirs:
+        if os.path.exists(font_dir + "/" + font_file):
+            font_full_path = font_dir + "/" + font_file
 
-    if not os.path.exists(font_dir + "/" + font_file):
-        raise Exception("Could not find font file")
-    font = io.fonts.add_font_from_file_ttf(font_dir + "/" + font_file, font_size)
+    if len(font_full_path) == 0:
+        raise RuntimeError("Could not find font file")
+    font = io.fonts.add_font_from_file_ttf(font_full_path, font_size)
     return font
 
 
