@@ -147,7 +147,7 @@ def _image_rgb_to_texture_impl(img_rgb):
 ALL_TEXTURES = {}
 
 
-def _image_to_texture(image_and_adjustments):
+def _image_to_texture(image_and_adjustments, always_refresh = False):
     """
     _image_to_texture will transfer the image to the GPU and return a texture Id
     Some GPU might choke if too many textures are transferred.
@@ -160,7 +160,7 @@ def _image_to_texture(image_and_adjustments):
     :param image_and_adjustments:
     :return: texture_id
     """
-    if image_and_adjustments not in ALL_TEXTURES:
+    if always_refresh or (image_and_adjustments not in ALL_TEXTURES):
         image_and_adjustments_copy = copy.deepcopy(image_and_adjustments)
         img_adjusted = image_and_adjustments_copy.adjusted_image()
         img_rgb = _to_rgb_image(img_adjusted)
@@ -207,7 +207,12 @@ def _image_viewport_size(image, width=None, height=None):
     zoomed_status={},
     zoom_click_times={},
     last_shown_image=None)
-def _image_impl(image_and_ajustments, width=None, height=None, title=""):
+def _image_impl(
+    image_and_ajustments, 
+    width=None, height=None, title="",
+    always_refresh = False
+    ):
+
     statics = _image_impl.statics
     statics.last_shown_image = image_and_ajustments
     zoom_key = imgui_ext.make_unique_label(title)
@@ -223,7 +228,7 @@ def _image_impl(image_and_ajustments, width=None, height=None, title=""):
         statics.zoomed_status[zoom_key] = False
         statics.zoom_click_times[zoom_key] = timer()
 
-    texture_id = _image_to_texture(image_and_ajustments)
+    texture_id = _image_to_texture(image_and_ajustments, always_refresh = always_refresh)
     if title == "":
         imgui.image_button(texture_id, viewport_size.width, viewport_size.height, frame_padding=0)
         is_mouse_hovering = imgui.is_item_hovered()
@@ -244,11 +249,24 @@ def _image_impl(image_and_ajustments, width=None, height=None, title=""):
     return mouse_position_last_image()
 
 
-def image(img, width=None, height=None, title="", image_adjustments=None):
+def image(
+    img, 
+    width=None, 
+    height=None, 
+    title="", 
+    image_adjustments=None,
+    always_refresh = False
+    ):
+    
     if image_adjustments is None:
         image_adjustments = ImageAdjustments()
     image_and_ajustments = ImageAndAdjustments(img, image_adjustments)
-    return _image_impl(image_and_ajustments, width=width, height=height, title=title)
+    return _image_impl(
+        image_and_ajustments, 
+        width=width, height=height, 
+        title=title,
+        always_refresh = always_refresh
+        )
 
 
 def _is_in_image(pixel, image_shape):
