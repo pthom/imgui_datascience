@@ -1,5 +1,5 @@
 matplotlib
-opencv-python
+opencv-python3
 imgui[pygame]
 enum34
 xxhash
