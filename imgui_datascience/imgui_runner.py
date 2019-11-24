@@ -1,5 +1,6 @@
 import sys
 import imgui
+import time
 from . import imgui_ext
 from .imgui_image_lister import ImGuiImageLister
 from . import imgui_cv
@@ -45,7 +46,12 @@ class Params:
 _g_Imgui_extensions_root_window_size = (640, 480)
 
 
-def run(gui_loop_function, params=Params()):
+def run(
+    gui_loop_function, 
+    params=Params(), 
+    on_init = None,
+    on_exit = None):
+
     if params.windowed_full_screen:
         os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (
             params.windowed_full_screen_x_margin / 2, params.window_title_height)
@@ -66,11 +72,24 @@ def run(gui_loop_function, params=Params()):
     io.display_size = win_size
 
     pygame_renderer = PygameRenderer()
+    # if on_exit:
+    #     pygame.register_quit(on_exit)
+
+    if on_init:
+        on_init()
 
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                sys.exit()
+                if on_exit:
+                    on_exit()
+                try:
+                    sys.exit()
+                except SystemExit as e:
+                    time.sleep(0.5)
+                    # sys.exit()
+                    # sys.terminate()
+                    os._exit(1)
 
             pygame_renderer.process_event(event)
 
