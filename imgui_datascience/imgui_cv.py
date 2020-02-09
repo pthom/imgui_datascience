@@ -8,18 +8,33 @@ from .static_vars import *
 from timeit import default_timer as timer
 from . import imgui_ext
 import math
+from typing import *
+from dataclasses import dataclass
 
 _start = timer()
 
 USE_FAST_HASH = True
 
-def _is_close(a, b):
+LOG_GPU_USAGE = False
+
+"""
+Some type synonyms in order to make the code easier to understand
+"""
+TextureId = int # this is an openGl texture id
+Image_RGB = np.ndarray # denotes a RGB image
+Image_AnyType = np.ndarray # denotes any image contained in a np.ndarray
+ImageAddress = int # this is the image memory address
+
+
+def _is_close(a: float, b: float) -> bool:
     return math.fabs(a - b) < 1E-6
 
 
 # noinspection PyShadowingNames
 class ImageAdjustments:
-    def __init__(self, factor=1., delta=0.):
+    factor: float
+    delta: float
+    def __init__(self, factor: float = 1., delta: float = 0.):
         self.factor = factor
         self.delta = delta
 
@@ -35,6 +50,9 @@ class ImageAdjustments:
 
     def __hash__(self):
         return hash((self.factor, self.delta))
+
+    def __eq__(self, other):
+        return self.factor == other.factor and self.delta == other.delta
 
 
 def _hash_image(image):
@@ -61,6 +79,8 @@ def _hash_image(image):
 
 
 class ImageAndAdjustments:
+    image: Image_AnyType
+    image_adjustment: ImageAdjustments
     def __init__(self, image, image_adjustments):
         self.image = image
         self.image_adjustments = image_adjustments
@@ -85,6 +105,8 @@ class ImageAndAdjustments:
 
 
 class SizePixel:
+    width: int
+    height: int
     def __init__(self, width=0, height=0):
         self.width = int(width)
         self.height = int(height)
@@ -99,8 +121,38 @@ class SizePixel:
     def as_tuple_width_height(self):
         return self.width, self.height
 
+# ALL_TEXTURES contains a dict of all the images that were transferred to the GPU
+# plus their last access time
 
-def _to_rgb_image(img):
+TimeSecond = float
+
+
+NB_GEN_TEXTURES = 0
+
+def _generate_texture_id() -> TextureId:
+    texture_id = gl.glGenTextures(1)
+    if LOG_GPU_USAGE:
+        global NB_GEN_TEXTURES
+        NB_GEN_TEXTURES = NB_GEN_TEXTURES + 1
+        print(f"NB_GEN_TEXTURES = {NB_GEN_TEXTURES}")
+    return texture_id
+
+
+@dataclass
+class ImageStoredOnGpu:
+    image_and_adjustments: ImageAndAdjustments
+    texture_id: TextureId
+    time_last_access: TimeSecond = -10000.
+    def __init__(self, image_and_adjustments: ImageAndAdjustments, time_last_access):
+        self.image_and_adjustments = image_and_adjustments
+        self.time_last_access = time_last_access
+        self.texture_id = _generate_texture_id()
+
+AllTexturesDict = Dict[ImageAddress, ImageStoredOnGpu]
+ALL_TEXTURES: AllTexturesDict = {}
+
+
+def _to_rgb_image(img: Image_AnyType) -> Image_RGB:
     img_rgb = None
     if len(img.shape) >= 3:
         channels = img.shape[2]
@@ -123,15 +175,19 @@ def _to_rgb_image(img):
         img_rgb = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
     return img_rgb
 
-
-def _image_rgb_to_texture_impl(img_rgb):
+NB_REFRESH_TEXTURES = 0
+def _image_rgb_to_texture_impl(img_rgb: Image_RGB, texture_id: TextureId):
     """
     Performs the actual transfer to the gpu and returns a texture_id
     """
     # inspired from https://www.programcreek.com/python/example/95539/OpenGL.GL.glPixelStorei (example 3)
+    if LOG_GPU_USAGE:
+        global NB_REFRESH_TEXTURES
+        NB_REFRESH_TEXTURES = NB_REFRESH_TEXTURES + 1
+        print(f"NB_REFRESH_TEXTURES = {NB_REFRESH_TEXTURES}")
     width = img_rgb.shape[1]
     height = img_rgb.shape[0]
-    texture_id = gl.glGenTextures(1)
+
     gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
     gl.glBindTexture(gl.GL_TEXTURE_2D, texture_id)
     gl.glPixelStorei(gl.GL_UNPACK_ALIGNMENT, 1)
@@ -142,12 +198,13 @@ def _image_rgb_to_texture_impl(img_rgb):
     return texture_id
 
 
-# ALL_TEXTURES contains a dict of all the images that were transferred to the GPU
-# plus their last access time
-ALL_TEXTURES = {}
 
 
-def _image_to_texture(image_and_adjustments, always_refresh = False):
+def _image_to_texture(
+    image_and_adjustments: ImageAndAdjustments,
+    always_refresh: bool,
+    linked_user_image_address: ImageAddress
+    ):
     """
     _image_to_texture will transfer the image to the GPU and return a texture Id
     Some GPU might choke if too many textures are transferred.
@@ -160,16 +217,30 @@ def _image_to_texture(image_and_adjustments, always_refresh = False):
     :param image_and_adjustments:
     :return: texture_id
     """
-    if always_refresh or (image_and_adjustments not in ALL_TEXTURES):
+    now = timer()
+    if linked_user_image_address == 0:
+        image_address = id(image_and_adjustments.image)
+    else:
+        image_address = linked_user_image_address
+
+    shall_refresh = False
+
+    if image_address not in ALL_TEXTURES:
+        ALL_TEXTURES[image_address] = ImageStoredOnGpu(image_and_adjustments, now)
+        shall_refresh = True
+
+    if always_refresh:
+        shall_refresh = True
+
+    image_stored_on_gpu: ImageStoredOnGpu = ALL_TEXTURES[image_address]
+    image_stored_on_gpu.time_last_access = now
+
+    if shall_refresh:
         image_and_adjustments_copy = copy.deepcopy(image_and_adjustments)
         img_adjusted = image_and_adjustments_copy.adjusted_image()
         img_rgb = _to_rgb_image(img_adjusted)
-        texture_id = _image_rgb_to_texture_impl(img_rgb)
-        ALL_TEXTURES[image_and_adjustments_copy] = [texture_id, timer()]
-        # print("Added one texture, len=" + str(len(ALL_TEXTURES)))
-    texture_and_time = ALL_TEXTURES[image_and_adjustments]
-    texture_and_time[1] = timer() # update this texture last usage time
-    return texture_and_time[0]
+        _image_rgb_to_texture_impl(img_rgb, image_stored_on_gpu.texture_id)
+    return image_stored_on_gpu.texture_id
 
 
 def _clear_all_cv_textures():
@@ -177,12 +248,12 @@ def _clear_all_cv_textures():
     all_textures_updated = {}
     textures_to_delete = []
     now = timer()
-    for id, texture_and_time in ALL_TEXTURES.items():
-        age_seconds = now - texture_and_time[1]
+    for image_address, image_stored_on_gpu in ALL_TEXTURES.items():
+        age_seconds = now - image_stored_on_gpu.time_last_access
         if age_seconds < 0.3:
-            all_textures_updated[id] = texture_and_time
+            all_textures_updated[image_address] = image_stored_on_gpu
         else:
-            textures_to_delete.append(texture_and_time[0])
+            textures_to_delete.append(image_stored_on_gpu.texture_id)
     ALL_TEXTURES = all_textures_updated
     if len(textures_to_delete) > 0:
         gl.glDeleteTextures(textures_to_delete)
@@ -208,9 +279,10 @@ def _image_viewport_size(image, width=None, height=None):
     zoom_click_times={},
     last_shown_image=None)
 def _image_impl(
-    image_and_ajustments, 
+    image_and_ajustments,
     width=None, height=None, title="",
-    always_refresh = False
+    always_refresh = False,
+    linked_user_image_address: ImageAddress = 0
     ):
 
     statics = _image_impl.statics
@@ -228,7 +300,11 @@ def _image_impl(
         statics.zoomed_status[zoom_key] = False
         statics.zoom_click_times[zoom_key] = timer()
 
-    texture_id = _image_to_texture(image_and_ajustments, always_refresh = always_refresh)
+    texture_id = _image_to_texture(
+        image_and_ajustments,
+        always_refresh = always_refresh,
+        linked_user_image_address=linked_user_image_address
+        )
     if title == "":
         imgui.image_button(texture_id, viewport_size.width, viewport_size.height, frame_padding=0)
         is_mouse_hovering = imgui.is_item_hovered()
@@ -250,22 +326,24 @@ def _image_impl(
 
 
 def image(
-    img, 
-    width=None, 
-    height=None, 
-    title="", 
+    img,
+    width=None,
+    height=None,
+    title="",
     image_adjustments=None,
-    always_refresh = False
+    always_refresh = False,
+    linked_user_image_address: ImageAddress = 0
     ):
-    
+
     if image_adjustments is None:
         image_adjustments = ImageAdjustments()
     image_and_ajustments = ImageAndAdjustments(img, image_adjustments)
     return _image_impl(
-        image_and_ajustments, 
-        width=width, height=height, 
+        image_and_ajustments,
+        width=width, height=height,
         title=title,
-        always_refresh = always_refresh
+        always_refresh = always_refresh,
+        linked_user_image_address = linked_user_image_address
         )
 
 
@@ -305,7 +383,9 @@ def is_mouse_hovering_last_image():  # only works if the image was presented in 
 
 
 def image_explorer(image, width=None, height=None, title="", zoom_key="", hide_buttons=False,
-                   image_adjustments=None):
+                   image_adjustments=None,
+                   always_refresh = False
+                   ):
     """
     :param image_adjustments:
     :param hide_buttons:
@@ -327,6 +407,8 @@ def image_explorer(image, width=None, height=None, title="", zoom_key="", hide_b
         title,
         zoom_key,
         image_adjustments,
-        hide_buttons=hide_buttons)
+        hide_buttons=hide_buttons,
+        always_refresh = always_refresh
+        )
     imgui.end_group()
     return mouse_location_original_image

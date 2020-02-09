@@ -7,8 +7,10 @@ from . import imgui_ext
 from . import imgui_cv
 from .imgui_cv import SizePixel
 from .static_vars import *
+from typing import *
 import cv2
 import math
+import copy
 
 
 def _is_close(a, b):
@@ -49,6 +51,16 @@ class ZoomInfo:
         self.affine_transform = np.eye(3)
         self.zoom_or_pan = ZoomOrPan.Pan
         self.last_delta = imgui.Vec2(0., 0.)
+
+    def __eq__(self, other):
+        equal = True
+        if not (self.affine_transform == other.affine_transform).all():
+            equal  = False
+        if not self.last_delta == other.last_delta:
+            equal  = False
+        if not self.zoom_or_pan == other.zoom_or_pan:
+            equal  = False
+        return equal
 
     def set_scale_one(self, image_size, viewport_size):
         self.affine_transform = np.eye(3)
@@ -172,11 +184,14 @@ def color_msg(color):
 
 
 # noinspection PyArgumentList,PyArgumentList
-def image_explorer_impl(im, title=""):
-    # type: (ImageWithZoomInfo, str) -> None
+def image_explorer_impl(
+    im: ImageWithZoomInfo, title:str = "", always_refresh:bool = False) \
+    -> Optional[imgui.Vec2]:
+
     """
     :return: imgui.Vec2 (mouse_location_original_image) or None (if not on image)
     """
+    linked_user_image_address = id(im.image)
 
     if im.image.size == 0:
         imgui.text("empty image !")
@@ -189,7 +204,12 @@ def image_explorer_impl(im, title=""):
         if title != "":
             imgui.same_line()
             imgui.text("     " + title)
-    mouse_location = imgui_cv.image(zoomed_image, image_adjustments=im.image_adjustments)
+    mouse_location = imgui_cv.image(
+        zoomed_image,
+        image_adjustments=im.image_adjustments,
+        always_refresh=always_refresh,
+        linked_user_image_address=linked_user_image_address
+        )
     mouse_location_original_image = None
     viewport_center_original_image = im.viewport_center_original_image()
 
@@ -338,9 +358,23 @@ def image_explorer_impl(im, title=""):
 
 @static_vars(
     all_ImageWithZoomInfo={},
-    all_zoom_info={}
+
+    all_zoom_info={},
+
+    previous_all_zoom_info={},
+    all_previous_image_adjustments = {}
 )
-def image_explorer_autostore_zoominfo(image, viewport_size, title, zoom_key, image_adjustments, hide_buttons):
+def image_explorer_autostore_zoominfo(
+    image,
+    viewport_size,
+    title,
+    zoom_key,
+    image_adjustments,
+    hide_buttons,
+    always_refresh
+    ):
+    image_address = id(image)
+
     statics = image_explorer_autostore_zoominfo.statics
     image_key = imgui_ext.make_unique_label(title)
     if zoom_key == "":
@@ -350,13 +384,13 @@ def image_explorer_autostore_zoominfo(image, viewport_size, title, zoom_key, ima
     if zoom_key not in statics.all_zoom_info:
         statics.all_zoom_info[zoom_key] = ZoomInfo.make_full_view(SizePixel.from_image(image), viewport_size)
 
-    flag_need_update = False
+    flag_need_store_image = False
     if image_key not in statics.all_ImageWithZoomInfo:
-        flag_need_update = True
+        flag_need_store_image = True
     elif id(statics.all_ImageWithZoomInfo[image_key].image) != id(image):
-        flag_need_update = True
+        flag_need_store_image = True
 
-    if flag_need_update:
+    if flag_need_store_image:
         statics.all_ImageWithZoomInfo[image_key] = ImageWithZoomInfo(
             image,
             viewport_size,
@@ -364,5 +398,33 @@ def image_explorer_autostore_zoominfo(image, viewport_size, title, zoom_key, ima
             hide_buttons=hide_buttons,
             image_adjustments=image_adjustments)
 
-    return image_explorer_impl(statics.all_ImageWithZoomInfo[image_key], title)
+    imageWithZoomInfo = statics.all_ImageWithZoomInfo[image_key]
+
+    def did_user_change_something():
+        changed = False
+        if     zoom_key not in statics.all_zoom_info \
+            or image_address not in statics.previous_all_zoom_info:
+            changed = True
+        else:
+            old_zoom = statics.previous_all_zoom_info[image_address]
+            current_zoom = statics.all_zoom_info[zoom_key]
+            if old_zoom != current_zoom:
+                changed = True
+
+        if image_address not in statics.all_previous_image_adjustments:
+            changed = True
+        else:
+            previous_image_adjustments = statics.all_previous_image_adjustments[image_address]
+            current_image_adjustments = imageWithZoomInfo.image_adjustments
+            if current_image_adjustments != previous_image_adjustments:
+                changed = True
+
+        return changed
+
+    if did_user_change_something():
+        always_refresh = True
+
+    statics.previous_all_zoom_info[image_address] = copy.deepcopy(statics.all_zoom_info[zoom_key])
+    statics.all_previous_image_adjustments[image_address] = copy.deepcopy(imageWithZoomInfo.image_adjustments)
+    return image_explorer_impl(statics.all_ImageWithZoomInfo[image_key], title, always_refresh=always_refresh)
 

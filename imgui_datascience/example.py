@@ -70,7 +70,7 @@ def demo_image_lister():
             ImGuiImageLister.push_image(name, cv2.imread(THIS_SCRIPT_DIR + "/images/" + name + ".jpg"))
             demo_image_lister.statics.inited = True
     imgui.text("""The image lister enable to keep a list of images in a separate window for further examination
-Just call 'ImGuiImageLister.show_toggle_window_button()' somewhere in your code, 
+Just call 'ImGuiImageLister.show_toggle_window_button()' somewhere in your code,
 and add images via 'ImGuiImageLister.push_image(name, image)'""")
     ImGuiImageLister.show_toggle_window_button()
 
@@ -136,19 +136,19 @@ def demo_cpp_to_python():
     show_buttons()
     imgui.separator()
     python_code = inspect.getsource(show_buttons)
-    python_advice = """    
-Since imgui is well suited 
+    python_advice = """
+Since imgui is well suited
 with static variables,
-a 'static_vars' decorator 
+a 'static_vars' decorator
 is provided
     """
     imgui.input_text_multiline("python code\n" + python_advice, python_code, len(python_code) * 2, 500, 150)
 
     imgui.text("\nThis python code is the equivalent of the following cpp code:\n\n")
-    cpp_code = """void ShowButtons() 
+    cpp_code = """void ShowButtons()
 {
     static bool clicked = false;
-    if (ImGui::Button("Button")) 
+    if (ImGui::Button("Button"))
         clicked = ! clicked;
     if (clicked)
     {
