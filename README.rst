@@ -13,6 +13,8 @@ A set of utilities for data science using python, imgui, numpy and opencv.
 
 * Free software: Apache Software License 2.0
 * Documentation: https://imgui_datascience.readthedocs.io.
+* Compatible with python 3 (not with python 2.7)
+
 * Demo:
 
 .. image:: images/yt.png
@@ -20,7 +22,6 @@ A set of utilities for data science using python, imgui, numpy and opencv.
         :width: 200
         :alt: Demo on YouTube
 
-Compatible with python 3 (not with python 2.7)
 
 Acknowledgments
 ===============
