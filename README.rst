@@ -20,7 +20,7 @@ A set of utilities for data science using python, imgui, numpy and opencv.
         :width: 200
         :alt: Demo on YouTube
 
-Compatible with python 2 and python3.
+Compatible with python 3 (not with python 2.7)
 
 Acknowledgments
 ===============
@@ -37,7 +37,7 @@ by William Baxter has provided some ideas for the image_explorer feature.
 Many thanks to their developers for their wonderful job.
 
 Install & test:
-==============
+===============
 
 Code::
     git clone https://github.com/pthom/imgui_datascience.git
@@ -56,8 +56,19 @@ The following types are supported : ``RGB, RGBA, GRAY, float32, float64``
 
 Code::
 
-    # returns mouse_position
-    imgui_cv.image(img, height=150, title="flowers")
+    # returns mouse_position in image coords
+    mouse_position = imgui_cv.image(img, height=150, title="flowers")
+
+If the content of your image varies (for example an image
+from a camera), pass always_refresh=True.
+
+For example:
+
+Code::
+
+
+    imgui_cv.image(video_image, always_refresh = True)
+
 
 Display matplotlib figures
 --------------------------
