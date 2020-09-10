@@ -1,0 +1,10 @@
+image:
+  file: tools/gitpod/gitpod.Dockerfile
+
+ports:
+  - port: 6080
+    protocol: "http"
+
+tasks:
+  - command: "echo 'hello'"
+
