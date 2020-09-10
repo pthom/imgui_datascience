@@ -9,7 +9,7 @@ from inspect import getsourcefile
 from os.path import abspath
 
 import matplotlib
-matplotlib.use('TkAgg')
+matplotlib.use('agg')
 import matplotlib.pyplot
 
 from . import *  # <=> i.e from imgui_datascience import *
