@@ -41,6 +41,7 @@ Install & test:
 ===============
 
 Code::
+
     git clone https://github.com/pthom/imgui_datascience.git
     cd imgui_datascience
     virtualenv env -p python3
