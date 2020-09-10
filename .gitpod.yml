@@ -4,7 +4,9 @@ image:
 ports:
   - port: 6080
     protocol: "http"
+    onOpen: open-browser
+  - port: 5900
+    onOpen: ignore
 
 tasks:
-  - command: "echo 'hello'"
-
+  - command: "python -m imgui_datascience --example"
