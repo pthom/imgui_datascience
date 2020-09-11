@@ -3,8 +3,7 @@ image:
 
 ports:
   - port: 6080
-    protocol: "http"
-    onOpen: open-browser
+    onOpen: open-preview
   - port: 5900
     onOpen: ignore
 
