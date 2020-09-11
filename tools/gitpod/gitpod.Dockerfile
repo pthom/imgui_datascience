@@ -19,5 +19,5 @@ RUN sudo apt-get clean \
 RUN pip install pygame matplotlib opencv-python imgui[pygame] enum34 xxhash
 
 # Change the default start-vnc-session.sh for a version with lower screen resolution
-COPY start-vnc-session.sh /usr/bin/
+COPY tools/gitpod/start-vnc-session.sh /usr/bin/
 RUN chmod +x /usr/bin/start-vnc-session.sh
