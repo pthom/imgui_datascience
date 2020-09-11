@@ -52,15 +52,13 @@ def demo_image_explorer():
     statics = demo_image_explorer.statics
     if statics.img_contours is None:
         statics.img_contours = make_contour_image(statics.img)
-    imgui.text("""imgui_cv.image_explorer() will show a detailed view of an opencv image.
-You can zoom, pan & see the colors of the pixels.
-You can optionally link the zoom of two images (using the zoom_key param)
+    imgui.text("""imgui_cv.image_explorer() will show a detailed view of an opencv image. You can zoom, pan & see the colors of the pixels.
+You can optionally link the zoom of two images (using the zoom_key param).
+Click the '+' button on the right image in order to see more info; then, click the 'adjust' button in order to adjust the view of a float matrix
 """)
-    imgui_cv.image_explorer(statics.img, zoom_key="1")
-    imgui.text("image_explorer is compatible with uint8 and float images")
-    imgui.text("Click the '+' button below this image in order to see more info")
-    imgui.text("Then, click the 'adjust' button in order to adjust the view of a float matrix")
-    imgui_cv.image_explorer(statics.img_contours, zoom_key="1", hide_buttons=True)
+    imgui_cv.image_explorer(statics.img, height=200, zoom_key="1")
+    imgui.same_line()
+    imgui_cv.image_explorer(statics.img_contours, height=200, zoom_key="1", hide_buttons=True)
 
 
 @static_vars(inited=False)
@@ -216,20 +214,15 @@ def show_one_feature(feature_function, feature_intro, default_open=False):
         feature_function()
 
 
-def show_fps():
-    imgui.set_next_window_position(0, 0, imgui.APPEARING)
-    imgui.set_next_window_size(100, 40, imgui.APPEARING)
-    imgui.begin("FPS")
-    msg = "{0:.1f}".format(imgui_runner.compute_fps())
-    imgui.text(msg)
-    imgui.end()
-
-
 def gui_loop():
-    imgui.set_next_window_position(0, 40, imgui.APPEARING)
-    imgui.set_next_window_size(750, 680, imgui.APPEARING)
+    imgui.set_next_window_position(750, 0, imgui.APPEARING)
+    imgui.show_test_window()
+
+    imgui.set_next_window_position(0, 0, imgui.APPEARING)
+    imgui.set_next_window_size(900, 680, imgui.APPEARING)
     imgui.begin("ImGui for data scientists")
-    show_fps()
+    fps = int(imgui_runner.compute_fps())
+    imgui.text(f"{fps} FPS")
     show_one_feature(demo_image, "Using opencv images (numpy.ndarray)")
     show_one_feature(demo_figs, "Using matplotlib figures")
     show_one_feature(demo_image_explorer, "Using image explorer")
@@ -242,10 +235,10 @@ def gui_loop():
     show_one_feature(demo_original_demo, "ImGui Demo")
     imgui.end()
 
-    imgui.set_next_window_position(750, 40, imgui.APPEARING)
-    imgui.show_test_window()
 
 
 def example():
-    imgui_runner.run(gui_loop, imgui_runner.Params(windowed_full_screen=True, win_title="Dear Imgui !",
-                                                   provide_default_window=False))
+    imgui_runner.run(gui_loop, imgui_runner.Params(
+        windowed_full_screen=True,
+        win_title="Dear Imgui !",
+        provide_default_window=False))
