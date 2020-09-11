@@ -199,11 +199,6 @@ def image_explorer_impl(
 
     zoomed_image = im.zoomed_image()
 
-    if not im.hide_buttons:
-        _display_zoom_or_pan_buttons(im)
-        if title != "":
-            imgui.same_line()
-            imgui.text("     " + title)
     mouse_location = imgui_cv.image(
         zoomed_image,
         image_adjustments=im.image_adjustments,
@@ -245,7 +240,12 @@ def image_explorer_impl(
 
             im.zoom_info.last_delta = drag_delta
 
-    # Zoom & Pan buttons
+        # Zoom & Pan buttons
+        if not im.hide_buttons:
+            _display_zoom_or_pan_buttons(im)
+            if title != "":
+                imgui.same_line()
+                imgui.text("     " + title)
 
     def perform_zoom(ratio):
         im.zoom_info.affine_transform = np.dot(
