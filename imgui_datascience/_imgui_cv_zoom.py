@@ -305,11 +305,11 @@ def image_explorer_impl(
             imgui.push_item_width(80)
             # noinspection PyArgumentList
             changed, im.image_adjustments.factor = imgui.slider_float(
-                imgui_ext.make_unique_label("k"), im.image_adjustments.factor, 0., 32., format="%.3f", power=5.)
+                imgui_ext.make_unique_label("k"), im.image_adjustments.factor, 0., 32., format="%.3f", flags=(1<<4) | (1<<5))
             imgui.same_line()
             imgui.push_item_width(80)
             changed, im.image_adjustments.delta = imgui.slider_float(
-                imgui_ext.make_unique_label("delta"), im.image_adjustments.delta, 0., 255., format="%.3f", power=5.)
+                imgui_ext.make_unique_label("delta"), im.image_adjustments.delta, 0., 255., format="%.3f", flags=(1<<4) | (1<<5))
             imgui.same_line()
             if not im.image_adjustments.is_none():
                 if imgui.small_button(imgui_ext.make_unique_label("reset")):
