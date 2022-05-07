@@ -1,5 +1,5 @@
 matplotlib
 opencv-python
-imgui[pygame]
+git+https://github.com/pyimgui/pyimgui.git@dev/version-2.0
 enum34
 xxhash
