@@ -44,7 +44,7 @@ Code::
 
     git clone https://github.com/pthom/imgui_datascience.git
     cd imgui_datascience
-    virtualenv env -p python3
+    python3 -m venv env
     source env/bin/activate
     pip install -r requirements.txt
     python run_example.py
