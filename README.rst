@@ -1,4 +1,4 @@
-Note: please consider checking out the (much more advanced) successor of this library: [ImGui Bundle](https://github.com/pthom/imgui_bundle)
+Note: please consider checking out the (much more advanced) successor of this library: https://github.com/pthom/imgui_bundle
 
 (Py)ImGui for Data Science
 ===============================================================================
